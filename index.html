@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeiMozhi | Premium Uthukuli Ghee & Homemade Dairy Store</title>
+  <meta name="description" content="Experience pure, handcrafted, made-to-order ghee and butter from the pastures of Uthukuli. Static frontend demo featuring a premium Apple/Amazon style shopping experience.">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="assets/css/neimozhi.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cream: '#FFFDF6',
+              light: '#FAF6EB',
+              gold: '#C59B27',
+              goldDark: '#A37C1E',
+              goldLight: '#E8D4A2',
+              dark: '#1C2816',
+              forest: '#2E3D2A',
+            }
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- External Libraries CDNs -->
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- AOS (Animate on Scroll) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+</head>
+<body class="bg-slate-50 text-brand-dark selection:bg-brand-gold selection:text-white">
+
+  <!-- ================= STICKY HEADER / NAVIGATION ================= -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent py-4 px-6 md:px-12 flex justify-between items-center no-print">
+    <a href="#home" class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-full overflow-hidden bg-brand-light border border-brand-gold flex items-center justify-center p-0.5 glow-gold">
+        <img src="assets/images/logo_neimozhi.jpg" alt="NeiMozhi Logo" class="h-full w-full object-cover rounded-full" onerror="this.src='https://images.unsplash.com/photo-1527018601619-a508a2be00cd?auto=format&fit=crop&w=100&q=80'">
+      </div>
+      <div class="flex flex-col">
+        <span class="font-serif text-xl font-bold tracking-wide text-brand-dark leading-none">NeiMozhi</span>
+        <span class="text-[8px] uppercase tracking-widest text-brand-gold font-semibold">by Uthukuli</span>
+      </div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-brand-dark">
+      <a href="#home" class="hover:text-brand-gold transition-colors">Home</a>
+      <a href="#products" class="hover:text-brand-gold transition-colors">Shop Collection</a>
+      <a href="#order-history" class="hover:text-brand-gold transition-colors flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+      
+      <!-- Cart Icon with Badge -->
+      <a href="#cart" class="relative hover:text-brand-gold transition-colors flex items-center gap-2 bg-brand-light border border-brand-gold/10 px-4 py-2 rounded-full">
+        <i class="fa-solid fa-basket-shopping text-sm text-brand-gold"></i> Cart
+        <span class="cart-badge hidden absolute -top-1.5 -right-1.5 bg-brand-gold text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full flex items-center justify-center min-w-4 h-4 shadow-sm">0</span>
+      </a>
+    </nav>
+
+    <!-- Mobile Navigation Trigger -->
+    <div class="flex items-center gap-4 lg:hidden">
+      <a href="#cart" class="relative p-2 text-brand-dark flex items-center">
+        <i class="fa-solid fa-basket-shopping text-xl"></i>
+        <span class="cart-badge hidden absolute top-0 right-0 bg-brand-gold text-white text-[8px] font-bold px-1 py-0.5 rounded-full flex items-center justify-center min-w-3.5 h-3.5">0</span>
+      </a>
+      <button id="menu-btn" class="text-brand-dark focus:outline-none p-2" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden absolute top-full left-0 right-0 bg-white border-b border-brand-gold/10 flex-col py-6 px-8 gap-4 shadow-xl lg:hidden text-center">
+      <a href="#home" class="text-sm font-semibold hover:text-brand-gold transition-colors py-1">Home</a>
+      <a href="#products" class="text-sm font-semibold hover:text-brand-gold transition-colors py-1">Shop Collection</a>
+      <a href="#order-history" class="text-sm font-semibold hover:text-brand-gold transition-colors py-1">Order History</a>
+      <a href="#cart" class="bg-brand-forest hover:bg-brand-dark text-white py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 mt-2 shadow">
+        <i class="fa-solid fa-basket-shopping"></i> View Cart (<span class="cart-badge">0</span>)
+      </a>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ROUTER WRAPPER ================= -->
+  <main class="min-h-screen">
+    
+    <!-- 1. HOME VIEW -->
+    <section id="view-home" class="view-section active">
+      <!-- Hero Section -->
+      <div class="relative min-h-screen lg:h-screen flex items-center pt-20 pb-8 lg:pb-16 px-6 md:px-12 lg:px-24 overflow-hidden bg-gradient-to-b from-[#FFFDF6] via-[#FAF6EB] to-slate-50">
+        <div class="absolute top-1/2 left-3/4 -translate-y-1/2 w-[600px] h-[600px] bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          
+          <div class="lg:col-span-7 flex flex-col items-start text-left" data-aos="fade-right">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-brand-goldDark text-xs font-semibold uppercase tracking-widest mb-6">
+              <i class="fa-solid fa-crown text-[10px]"></i> Traditional Uthukuli Heritage
+            </div>
+            <h1 class="font-serif text-5xl md:text-7xl font-extrabold text-brand-dark tracking-tight leading-[1.1] mb-6">
+              The Pure Aroma of <br>
+              <span class="text-brand-gold font-normal italic font-serif">Traditional Ghee</span>
+            </h1>
+            <p class="text-base text-slate-600 max-w-lg mb-10 leading-relaxed">
+              Experience the unmatched flavor of golden, grainy, made-to-order ghee from Uthukuli. Churned with love and packed fresh without preservatives.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-8">
+              <a href="#products" class="bg-brand-forest hover:bg-brand-dark text-white px-8 py-4 rounded-full font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                SHOP COLLECTION <i class="fa-solid fa-arrow-right text-xs"></i>
+              </a>
+              <a href="https://wa.me/919876543210?text=Hello%20NeiMozhi!%20I'd%2520like%2520to%2520chat%252520about%252520ghee." target="_blank" class="bg-white hover:bg-brand-light text-brand-forest border border-brand-forest/20 px-8 py-4 rounded-full font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-3 hover:border-brand-forest/40 transition-all duration-300 hover:-translate-y-0.5">
+                <i class="fab fa-whatsapp text-lg text-emerald-500"></i> CHAT ON WHATSAPP
+              </a>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 w-full pt-6 md:pt-8 border-t border-brand-gold/15">
+              <div class="flex items-center gap-2 sm:gap-3">
+                <div class="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg bg-amber-50 border border-brand-gold/10 flex items-center justify-center text-brand-gold">
+                  <i class="fa-solid fa-box-open text-sm sm:text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="text-[9px] sm:text-xs font-bold uppercase tracking-wide leading-tight">Made to Order</h4>
+                  <p class="text-[9px] sm:text-[10px] text-slate-500">100% Fresh</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-2 sm:gap-3">
+                <div class="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg bg-amber-50 border border-brand-gold/10 flex items-center justify-center text-brand-gold">
+                  <i class="fa-solid fa-truck-fast text-sm sm:text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="text-[9px] sm:text-xs font-bold uppercase tracking-wide leading-tight">Pan India</h4>
+                  <p class="text-[9px] sm:text-[10px] text-slate-500">Safe Delivery</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 sm:gap-3">
+                <div class="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg bg-amber-50 border border-brand-gold/10 flex items-center justify-center text-brand-gold">
+                  <i class="fa-solid fa-shield-halved text-sm sm:text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="text-[9px] sm:text-xs font-bold uppercase tracking-wide leading-tight">Zero Preservatives</h4>
+                  <p class="text-[9px] sm:text-[10px] text-slate-500">Clean & Natural</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 sm:gap-3">
+                <div class="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg bg-amber-50 border border-brand-gold/10 flex items-center justify-center text-brand-gold">
+                  <i class="fa-solid fa-mortar-pestle text-sm sm:text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="text-[9px] sm:text-xs font-bold uppercase tracking-wide leading-tight">Bilona Churned</h4>
+                  <p class="text-[9px] sm:text-[10px] text-slate-500">Traditional</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex justify-center items-center mt-8 lg:mt-0" data-aos="fade-left">
+            <div class="relative w-56 h-56 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 sm:border-8 border-white shadow-2xl glow-gold zoom-img-container">
+              <img src="assets/images/hero_ghee.jpg" alt="Pure Golden Ghee" class="w-full h-full object-cover zoom-img" onerror="this.src='https://images.unsplash.com/photo-1626200419199-391ae4cd7e41?auto=format&fit=crop&w=600&q=80'">
+              
+              <!-- Floating badge overlay -->
+              <div class="absolute bottom-3 right-3 bg-brand-gold text-white p-2 sm:p-3 rounded-full shadow-lg border border-brand-goldLight flex flex-col items-center justify-center text-center w-14 h-14 sm:w-20 sm:h-20 rotate-12 hover:rotate-0 transition-transform duration-300 z-10">
+                <span class="text-[7px] sm:text-[8px] uppercase font-bold tracking-widest leading-none">Uthukuli</span>
+                <span class="text-[10px] sm:text-xs font-serif italic leading-tight">Special</span>
+                <span class="text-[7px] sm:text-[8px] font-bold leading-none">100% Pure</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Categories Quick Navigation banner -->
+      <div class="pt-8 pb-6 md:py-12 bg-white border-t border-b border-slate-100 px-6 no-print">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+          <div class="pt-2 md:pt-0">
+            <h2 class="font-serif text-2xl md:text-3xl font-bold text-brand-dark">Premium Handcrafted Categories</h2>
+            <p class="text-[11px] md:text-xs text-slate-400 mt-1">Sourced from grass-fed cows and prepared with Vedic churning methods.</p>
+          </div>
+          <div class="flex gap-4">
+            <a href="#products" class="px-6 py-3 rounded-full bg-brand-light border border-brand-gold/20 text-brand-dark text-xs font-bold uppercase tracking-wider hover:bg-brand-gold hover:text-white transition-colors">
+              Ghee (<span class="font-serif italic font-normal">Clarified Butter</span>)
+            </a>
+            <a href="#products" class="px-6 py-3 rounded-full bg-brand-light border border-brand-gold/20 text-brand-dark text-xs font-bold uppercase tracking-wider hover:bg-brand-gold hover:text-white transition-colors">
+              Butter (<span class="font-serif italic font-normal">Freshly Churned</span>)
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best Sellers grid section -->
+      <div class="py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
+          <span class="text-brand-gold font-semibold uppercase tracking-widest text-xs mb-3">Our Specialties</span>
+          <h2 class="font-serif text-4xl md:text-5xl font-bold text-brand-dark mb-4">
+            Featured Products
+          </h2>
+          <p class="text-slate-500 text-sm">
+            Discover the legacy of Uthukuli dairy crafts. Fresh, pure, and rich in natural nutrients.
+          </p>
+        </div>
+
+        <div id="featured-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+          <!-- Dynamic bestsellers loaded from JS -->
+        </div>
+      </div>
+
+      <!-- Brand Story -->
+      <div class="py-24 bg-brand-light px-6 md:px-12 lg:px-24">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div class="lg:col-span-6 rounded-3xl overflow-hidden shadow-xl aspect-video relative zoom-img-container border-4 border-white glow-gold" data-aos="fade-right">
+            <img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=800&q=80" alt="Indian Pastoral Farm" class="w-full h-full object-cover zoom-img">
+          </div>
+          <div class="lg:col-span-6 flex flex-col items-start" data-aos="fade-left">
+            <span class="text-brand-gold font-semibold uppercase tracking-widest text-xs mb-3">The NeiMozhi Legacy</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-brand-dark mb-6 leading-tight">
+              Crafted in the Heart of Uthukuli
+            </h2>
+            <p class="text-slate-600 mb-6 text-sm leading-relaxed">
+              For generations, the unique soil, climate, and water of Uthukuli have yielded milk of unparalleled quality. We translate this heritage into **NeiMozhi** (<i>'The Language of Ghee'</i>). 
+            </p>
+            <p class="text-slate-600 mb-8 text-sm leading-relaxed">
+              Our products are crafted inside a traditional family kitchen. We do not mass-produce. We prepare each batch only after an order is received, ensuring that the incredible, nutty aroma of slow-melted butter stays locked inside our glass jars until they reach your kitchen.
+            </p>
+            <a href="#products" class="bg-brand-forest hover:bg-brand-dark text-white px-8 py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-colors shadow">
+              Explore Our Store
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- How NeiMozhi Ghee is Prepared & Video Section -->
+      <div class="py-24 bg-white border-b border-slate-100 px-6 md:px-12 lg:px-24 no-print">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
+            <span class="text-brand-gold font-semibold uppercase tracking-widest text-xs mb-3">Our Preparation Craft</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-brand-dark mb-4">
+              How NeiMozhi Ghee is Prepared
+            </h2>
+            <p class="text-slate-500 text-sm">
+              Watch our slow traditional process and discover the care we put into every handcrafted jar of Uthukuli Ghee.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Video Player Column -->
+            <div class="lg:col-span-6" data-aos="fade-right">
+              <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-brand-gold/10 aspect-video group glow-gold bg-slate-900">
+                <!-- Video element -->
+                <video id="prep-video" class="w-full h-full object-cover hidden" controls>
+                  <source src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c02cba23e66014e7a79e4d0d01ee037e&profile_id=139&oauth2_token_id=57447761" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                <!-- Poster/Overlay image -->
+                <div id="video-overlay" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center cursor-pointer transition-transform duration-500 group-hover:scale-[1.02]">
+                  <img src="assets/images/hero_ghee.jpg" alt="Traditional Preparation Video Poster" class="absolute inset-0 w-full h-full object-cover brightness-[0.6]" onerror="this.src='https://images.unsplash.com/photo-1626200419199-391ae4cd7e41?auto=format&fit=crop&w=800&q=80'">
+                  <!-- Floating Play Button -->
+                  <button onclick="playPrepVideo()" class="relative z-10 h-20 w-20 rounded-full bg-white/95 text-brand-forest hover:bg-brand-gold hover:text-white flex items-center justify-center text-3xl shadow-2xl transition-all duration-300 transform group-hover:scale-110 active:scale-95 glow-pulse">
+                    <i class="fa-solid fa-play ml-1"></i>
+                  </button>
+                  <span class="relative z-10 text-white text-[10px] uppercase font-bold tracking-widest mt-4">Watch Preparation Video</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Timeline Steps Column -->
+            <div class="lg:col-span-6 space-y-6" data-aos="fade-left">
+              
+              <!-- Step 1 -->
+              <div class="flex gap-4 p-5 rounded-2xl bg-brand-light/50 border border-brand-gold/10 hover:bg-brand-light transition-colors">
+                <div class="h-16 w-16 rounded-xl bg-brand-light border border-brand-gold/20 flex-shrink-0 flex flex-col items-center justify-center gap-1">
+                  <i class="fa-solid fa-camera text-brand-gold/40 text-xl"></i>
+                  <span class="text-[8px] font-bold uppercase tracking-wide text-brand-gold/50 leading-none">Soon</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 bg-brand-gold/15 text-brand-goldDark rounded-md">Step 01</span>
+                    <h4 class="font-serif text-base font-bold text-brand-dark">Fresh Milk Collection</h4>
+                  </div>
+                  <p class="text-xs text-slate-500 leading-normal">
+                    We collect organic, high-fat cow and buffalo milk daily from native pastoral farms in Uthukuli.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="flex gap-4 p-5 rounded-2xl bg-brand-light/50 border border-brand-gold/10 hover:bg-brand-light transition-colors">
+                <div class="h-16 w-16 rounded-xl bg-brand-light border border-brand-gold/20 flex-shrink-0 flex flex-col items-center justify-center gap-1">
+                  <i class="fa-solid fa-camera text-brand-gold/40 text-xl"></i>
+                  <span class="text-[8px] font-bold uppercase tracking-wide text-brand-gold/50 leading-none">Soon</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 bg-brand-gold/15 text-brand-goldDark rounded-md">Step 02</span>
+                    <h4 class="font-serif text-base font-bold text-brand-dark">Vedic Bilona Churning</h4>
+                  </div>
+                  <p class="text-xs text-slate-500 leading-normal">
+                    Curd is bi-directionally churned using traditional wooden churners to separate fresh, cream butter.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="flex gap-4 p-5 rounded-2xl bg-brand-light/50 border border-brand-gold/10 hover:bg-brand-light transition-colors">
+                <div class="h-16 w-16 rounded-xl bg-brand-light border border-brand-gold/20 flex-shrink-0 flex flex-col items-center justify-center gap-1">
+                  <i class="fa-solid fa-camera text-brand-gold/40 text-xl"></i>
+                  <span class="text-[8px] font-bold uppercase tracking-wide text-brand-gold/50 leading-none">Soon</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 bg-brand-gold/15 text-brand-goldDark rounded-md">Step 03</span>
+                    <h4 class="font-serif text-base font-bold text-brand-dark">Wood Fire Slow Heating</h4>
+                  </div>
+                  <p class="text-xs text-slate-500 leading-normal">
+                    Butter is melted and clarified slowly on traditional fire stoves, letting the aroma lock in naturally.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Reviews -->
+      <div class="py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16" data-aos="fade-up">
+          <span class="text-brand-gold font-semibold uppercase tracking-widest text-xs mb-3">Verifications</span>
+          <h2 class="font-serif text-4xl md:text-5xl font-bold text-brand-dark mb-4">
+            Loved by Homemade Ghee Enthusiasts
+          </h2>
+          <p class="text-slate-500 text-sm">
+            Read what our families say about the authentic texture, taste, and packaging of NeiMozhi dairy products.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Testimonial 1 -->
+          <div class="bg-white p-8 rounded-3xl border border-brand-gold/10 shadow-sm flex flex-col justify-between" data-aos="fade-up">
+            <div>
+              <div class="flex text-amber-400 text-xs mb-4">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-xs italic text-slate-600 leading-relaxed mb-6">
+                "The aroma of this cow ghee took me back to my childhood days in Uthukuli. It has a beautiful grainy texture and makes simple hot rice with dhal taste like heaven! Superb packing."
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 rounded-full bg-brand-light flex items-center justify-center font-bold text-brand-gold text-[11px]">SR</div>
+              <div>
+                <h4 class="text-xs font-bold text-brand-dark">Swaminathan R.</h4>
+                <p class="text-[9px] uppercase tracking-wider text-slate-400">Coimbatore, TN</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="bg-white p-8 rounded-3xl border border-brand-gold/10 shadow-sm flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+            <div>
+              <div class="flex text-amber-400 text-xs mb-4">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-xs italic text-slate-600 leading-relaxed mb-6">
+                "I ordered the A2 Bilona Ghee. Its purity is unmatched. Truly wood-fire churned and light. My children love it. Also, the parcel arrived in thick carton sheets with no damages."
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 rounded-full bg-brand-light flex items-center justify-center font-bold text-brand-gold text-[11px]">KG</div>
+              <div>
+                <h4 class="text-xs font-bold text-brand-dark">Karthika G.</h4>
+                <p class="text-[9px] uppercase tracking-wider text-slate-400">Bengaluru, KA</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="bg-white p-8 rounded-3xl border border-brand-gold/10 shadow-sm flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
+            <div>
+              <div class="flex text-amber-400 text-xs mb-4">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-xs italic text-slate-600 leading-relaxed mb-6">
+                "The buffalo ghee has a wonderful deep aroma. Used it for making traditional sweets during Diwali. Unsalted butter is also super creamy. Made-to-order freshness guarantees quality."
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 rounded-full bg-brand-light flex items-center justify-center font-bold text-brand-gold text-[11px]">MA</div>
+              <div>
+                <h4 class="text-xs font-bold text-brand-dark">Meenakshi A.</h4>
+                <p class="text-[9px] uppercase tracking-wider text-slate-400">Mumbai, MH</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PRODUCT LISTING VIEW -->
+    <section id="view-products" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-brand-gold font-semibold uppercase tracking-widest text-xs mb-3">NeiMozhi Marketplace</span>
+          <h2 class="font-serif text-4xl md:text-5xl font-bold text-brand-dark mb-4">
+            Shop Pure Clarified Butter & Fresh Butter
+          </h2>
+          <p class="text-slate-500 text-sm">
+            Select variant weight option, view updated price, and click Add to Cart to begin your checkout.
+          </p>
+        </div>
+
+        <!-- Products Grid Container loaded from JS -->
+        <div id="products-grid-view" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+          <!-- Dynamic products lists -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PRODUCT DETAILS VIEW -->
+    <section id="view-product-details" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-7xl mx-auto" id="product-details-content">
+        <!-- Rendered dynamically from JS -->
+      </div>
+    </section>
+
+    <!-- 4. SHOPPING CART VIEW -->
+    <section id="view-cart" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="font-serif text-4xl font-bold text-brand-dark mb-8">Shopping Cart</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <!-- Items List Column -->
+          <div class="lg:col-span-8 space-y-6" id="cart-items-container">
+            <!-- Dynamic cart items rows -->
+          </div>
+
+          <!-- Checkout calculations Sidebar -->
+          <div class="lg:col-span-4" id="cart-summary-card">
+            <!-- Dynamic order summary totals -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CHECKOUT VIEW -->
+    <section id="view-checkout" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-8">
+          <a href="#cart" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-brand-dark transition-colors">
+            <i class="fa-solid fa-arrow-left-long text-sm"></i> Back to Shopping Cart
+          </a>
+        </div>
+
+        <h2 class="font-serif text-4xl font-bold text-brand-dark mb-8">Checkout</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          <!-- Shipping Form Panel -->
+          <div class="lg:col-span-8 bg-white p-8 md:p-10 rounded-3xl border border-slate-200 shadow-sm">
+            <h3 class="font-serif text-2xl font-bold text-brand-dark mb-6 pb-2 border-b border-brand-light">Shipping Information</h3>
+            
+            <form id="checkout-form" class="space-y-6" onsubmit="event.preventDefault();">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Full name -->
+                <div class="flex flex-col">
+                  <label for="input-name" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Full Name *</label>
+                  <input type="text" id="input-name" required placeholder="Enter your full name" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+                </div>
+                <!-- Phone -->
+                <div class="flex flex-col">
+                  <label for="input-phone" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Mobile Number *</label>
+                  <input type="tel" id="input-phone" required placeholder="Enter mobile number" inputmode="numeric" pattern="[0-9]*" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="flex flex-col">
+                <label for="input-email" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Email Address *</label>
+                <input type="email" id="input-email" required placeholder="Enter email address" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+              </div>
+
+              <!-- Address -->
+              <div class="flex flex-col">
+                <label for="input-street" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">House / Street Address *</label>
+                <input type="text" id="input-street" required placeholder="Flat No., House Name, Building, Street Address" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- City -->
+                <div class="flex flex-col">
+                  <label for="input-city" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">City *</label>
+                  <input type="text" id="input-city" required placeholder="Enter city" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+                </div>
+                <!-- State -->
+                <div class="flex flex-col">
+                  <label for="input-state" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">State *</label>
+                  <input type="text" id="input-state" required placeholder="Enter state" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+                </div>
+                <!-- Pincode -->
+                <div class="flex flex-col">
+                  <label for="input-pincode" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Pincode *</label>
+                  <input type="text" id="input-pincode" required placeholder="6-digit pincode" inputmode="numeric" pattern="[0-9]*" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+                </div>
+              </div>
+
+              <!-- Landmark -->
+              <div class="flex flex-col">
+                <label for="input-landmark" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Landmark (Optional)</label>
+                <input type="text" id="input-landmark" placeholder="Nearby school, temple, office etc." class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+              </div>
+
+              <!-- Order Notes -->
+              <div class="flex flex-col">
+                <label for="input-notes" class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Order Notes (Optional)</label>
+                <textarea id="input-notes" placeholder="Any special cooking, packing or delivery instructions" rows="3" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50"></textarea>
+              </div>
+            </form>
+          </div>
+
+          <!-- Order Summary Sidebar Column -->
+          <div class="lg:col-span-4" id="checkout-summary-sidebar">
+            <!-- Rendered dynamically from JS -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. ORDER CONFIRMATION VIEW -->
+    <section id="view-order-confirmation" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-7xl mx-auto" id="order-confirmation-content">
+        <!-- Rendered dynamically from JS -->
+      </div>
+    </section>
+
+    <!-- 7. ORDER HISTORY VIEW -->
+    <section id="view-order-history" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="font-serif text-4xl font-bold text-brand-dark mb-2">Order History</h2>
+        <p class="text-xs text-slate-400 mb-8">Review your past mock transaction logs stored in your browser's LocalStorage.</p>
+        
+        <div class="space-y-6" id="order-history-list">
+          <!-- Dynamic order history list -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= COMMON FOOTER ================= -->
+  <footer class="bg-brand-dark text-brand-light py-16 px-6 md:px-12 lg:px-24 border-t border-brand-gold/10 no-print">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 mb-12">
+      
+      <div class="md:col-span-6 flex flex-col items-start">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="h-10 w-10 rounded-full overflow-hidden bg-brand-light border border-brand-gold flex items-center justify-center p-0.5">
+            <img src="assets/images/logo_neimozhi.jpg" alt="NeiMozhi Logo" class="h-full w-full object-cover rounded-full" onerror="this.src='https://images.unsplash.com/photo-1527018601619-a508a2be00cd?auto=format&fit=crop&w=100&q=80'">
+          </div>
+          <div class="flex flex-col">
+            <span class="font-serif text-xl font-bold tracking-wide text-white leading-none">NeiMozhi</span>
+            <span class="text-[8px] uppercase tracking-widest text-brand-gold font-semibold">by Uthukuli</span>
+          </div>
+        </div>
+        <p class="text-xs text-brand-light/70 leading-relaxed max-w-sm">
+          Handcrafting the finest, grainiest, and most aromatic ghee using the Uthukuli method. Made strictly on order basis to guarantee ultimate freshness.
+        </p>
+      </div>
+
+      <div class="md:col-span-3 flex flex-col">
+        <h4 class="text-brand-goldLight text-xs font-bold uppercase tracking-widest mb-6">Navigation</h4>
+        <nav class="flex flex-col gap-3 text-xs text-brand-light/80">
+          <a href="#home" class="hover:text-brand-gold transition-colors">Home</a>
+          <a href="#products" class="hover:text-brand-gold transition-colors">Shop Collection</a>
+          <a href="#cart" class="hover:text-brand-gold transition-colors">Shopping Cart</a>
+          <a href="#order-history" class="hover:text-brand-gold transition-colors">Order History</a>
+        </nav>
+      </div>
+
+      <div class="md:col-span-3 flex flex-col">
+        <h4 class="text-brand-goldLight text-xs font-bold uppercase tracking-widest mb-6">Contact & Social</h4>
+        <nav class="flex flex-col gap-3 text-xs text-brand-light/80 mb-6">
+          <span>Address: Tiruppur District, Tamil Nadu</span>
+          <span>Email: orders@neimozhi.com</span>
+        </nav>
+        <div class="flex gap-4">
+          <a href="https://instagram.com" target="_blank" class="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center text-brand-light hover:bg-brand-gold hover:text-brand-dark transition-all duration-300" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/919876543210" target="_blank" class="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center text-brand-light hover:bg-brand-gold hover:text-brand-dark transition-all duration-300" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-[10px] text-brand-light/50 gap-4 text-center">
+      <p>© 2026 NeiMozhi by Uthukuli. All rights reserved.</p>
+      <p>Created by <a href="https://nextgenwebstudio.in" target="_blank" class="text-brand-gold hover:text-brand-goldLight underline underline-offset-2 transition-colors">NextGen</a></p>
+    </div>
+  </footer>
+
+  <!-- ================= FLOATING TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col gap-3 pointer-events-auto no-print">
+    <!-- Toasts get appended here dynamically -->
+  </div>
+
+  <!-- ================= FLOATING WHATSAPP BUTTON ================= -->
+  <a href="https://wa.me/919876543210" target="_blank" class="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-40 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center text-2xl sm:text-3xl shadow-2xl transition-all duration-300 hover:scale-110 glow-pulse hover:rotate-6 no-print" aria-label="Order on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- ================= JAVASCRIPT LIBRARIES ================= -->
+  <!-- AOS (Scroll Animations) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 80
+      });
+
+      // Back to Top scroll handler
+      const btt = document.getElementById('back-to-top-btn');
+      if (btt) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            btt.classList.add('show');
+          } else {
+            btt.classList.remove('show');
+          }
+        });
+        btt.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
+  
+  <!-- Floating Back to Top Button -->
+  <button id="back-to-top-btn" class="back-to-top h-11 w-11 rounded-full bg-white text-brand-dark shadow-lg border border-slate-200 flex items-center justify-center hover:bg-brand-light transition-all focus:outline-none no-print" aria-label="Back to Top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- Core script -->
+  <script src="assets/js/neimozhi.js"></script>
+</body>
+</html>
