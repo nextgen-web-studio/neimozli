@@ -932,7 +932,7 @@ function initiateRazorpayPayment(orderData) {
   if (btn) { btn.disabled = true; btn.textContent = 'Opening Payment…'; }
 
   const options = {
-    key: 'rzp_test_TMkPB4Kf0yKrRE',
+    key: window.NEIMOZHI_CONFIG ? window.NEIMOZHI_CONFIG.razorpay.keyId : 'rzp_test_TMkPB4Kf0yKrRE',
     amount: Math.round(orderData.amount * 100),   // paise, must be integer
     currency: 'INR',
     name: 'NeiMozhi by Uthukuli',
