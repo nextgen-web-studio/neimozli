@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeiMozhi Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: { cream:'#FFFDF6',light:'#FAF6EB',gold:'#C59B27',goldDark:'#A37C1E',goldLight:'#E8D4A2',dark:'#1C2816',forest:'#2E3D2A' } }, fontFamily: { serif:['Cormorant Garamond','serif'], sans:['Inter','sans-serif'] } } }
+    }
+  </script>
+  <style>
+    *{font-family:'Inter',sans-serif}
+    .font-serif{font-family:'Cormorant Garamond',serif}
+    body{background:#FAF6EB}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+    .shake{animation:shake 0.4s ease}
+    .badge-paid{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7}
+    .badge-pending{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+    .badge-dispatched{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd}
+    .badge-delivered{background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd}
+    .badge-completed{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:#FAF6EB}
+    ::-webkit-scrollbar-thumb{background:#C59B27;border-radius:6px}
+    tr.order-row:hover td{background:#FFF9EC}
+    @media print{.no-print{display:none!important}body{background:#fff}}
+  </style>
+</head>
+<body class="min-h-screen bg-brand-light text-brand-dark">
+
+<!-- LOGIN -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl shadow-2xl border border-brand-gold/20 p-8 sm:p-12 w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="h-20 w-20 rounded-full overflow-hidden border-4 border-brand-gold/30 shadow-lg mx-auto mb-4">
+        <img src="../assets/images/logo_neimozhi.jpg" alt="NeiMozhi" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full bg-brand-light text-brand-gold text-2xl font-serif font-bold\'>N</div>'">
+      </div>
+      <h1 class="font-serif text-3xl font-bold text-brand-dark">NeiMozhi</h1>
+      <p class="text-xs text-brand-gold uppercase tracking-widest font-semibold mt-1">Admin Dashboard</p>
+      <p class="text-xs text-slate-400 mt-3">Sign in to manage orders and products</p>
+    </div>
+    <div id="login-form" class="space-y-4">
+      <div>
+        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500 block mb-1.5">Password</label>
+        <input id="admin-password" type="password" placeholder="Enter admin password"
+          class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-gold/40 focus:border-brand-gold transition-all"
+          onkeydown="if(event.key==='Enter')attemptLogin()">
+      </div>
+      <div id="login-error" class="hidden text-xs text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-2.5">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Incorrect password. Please try again.
+      </div>
+      <button onclick="attemptLogin()" class="w-full bg-brand-forest hover:bg-brand-dark text-white py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs transition-all shadow-md">
+        Sign In <i class="fa-solid fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+    <p class="text-[10px] text-slate-300 text-center mt-6">NeiMozhi by Uthukuli &copy; 2026</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden min-h-screen">
+  <!-- Header -->
+  <header class="bg-white border-b border-brand-gold/15 sticky top-0 z-40 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-full overflow-hidden border-2 border-brand-gold/30 flex-shrink-0">
+          <img src="../assets/images/logo_neimozhi.jpg" alt="Logo" class="w-full h-full object-cover" onerror="this.src='../assets/images/logo_neimozhi.jpg'">
+        </div>
+        <div>
+          <span class="font-serif text-lg font-bold text-brand-dark leading-none block">NeiMozhi</span>
+          <span class="text-[9px] uppercase tracking-widest text-brand-gold font-semibold">Admin</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="loadDashboard()" class="text-xs text-slate-500 hover:text-brand-dark border border-slate-200 rounded-lg px-3 py-2 transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate text-xs"></i><span class="hidden sm:inline">Refresh</span>
+        </button>
+        <a href="../" target="_blank" class="text-xs text-brand-gold border border-brand-gold/30 rounded-lg px-3 py-2 hover:bg-brand-gold hover:text-white transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-store text-xs"></i><span class="hidden sm:inline">Store</span>
+        </a>
+        <button onclick="logout()" class="text-xs text-white bg-rose-500 hover:bg-rose-600 rounded-lg px-3 py-2 transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-right-from-bracket text-xs"></i><span class="hidden sm:inline">Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div class="bg-white rounded-2xl border border-brand-gold/15 p-4 sm:p-5 shadow-sm">
+        <div class="h-9 w-9 rounded-xl bg-amber-50 border border-brand-gold/10 flex items-center justify-center text-brand-gold mb-3">
+          <i class="fa-solid fa-receipt text-sm"></i>
+        </div>
+        <div class="text-2xl sm:text-3xl font-bold text-brand-dark font-serif" id="kpi-total-orders">0</div>
+        <div class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">Total Orders</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-brand-gold/15 p-4 sm:p-5 shadow-sm">
+        <div class="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
+          <i class="fa-solid fa-indian-rupee-sign text-sm"></i>
+        </div>
+        <div class="text-2xl sm:text-3xl font-bold text-brand-dark font-serif" id="kpi-revenue">&#8377;0</div>
+        <div class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">Total Revenue</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-brand-gold/15 p-4 sm:p-5 shadow-sm">
+        <div class="h-9 w-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-500 mb-3">
+          <i class="fa-solid fa-credit-card text-sm"></i>
+        </div>
+        <div class="text-2xl sm:text-3xl font-bold text-brand-dark font-serif" id="kpi-paid">0</div>
+        <div class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">Paid Orders</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-brand-gold/15 p-4 sm:p-5 shadow-sm">
+        <div class="h-9 w-9 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-500 mb-3">
+          <i class="fa-solid fa-calendar-day text-sm"></i>
+        </div>
+        <div class="text-2xl sm:text-3xl font-bold text-brand-dark font-serif" id="kpi-today">0</div>
+        <div class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mt-1">Today's Orders</div>
+      </div>
+    </div>
+
+    <!-- Chart + Products -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 bg-white rounded-2xl border border-brand-gold/15 p-5 sm:p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="font-serif text-xl font-bold text-brand-dark">Revenue &mdash; Last 7 Days</h2>
+          <span class="text-[10px] uppercase tracking-widest text-slate-400">&#8377; INR</span>
+        </div>
+        <div id="revenue-chart" class="flex items-end gap-1 sm:gap-2 h-36 sm:h-44 w-full pt-6 relative"></div>
+        <div id="revenue-labels" class="flex gap-1 sm:gap-2 mt-2"></div>
+      </div>
+      <div class="bg-white rounded-2xl border border-brand-gold/15 p-5 sm:p-6 shadow-sm">
+        <h2 class="font-serif text-xl font-bold text-brand-dark mb-4">Products</h2>
+        <div id="product-list" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="bg-white rounded-2xl border border-brand-gold/15 shadow-sm">
+      <div class="p-4 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
+        <h2 class="font-serif text-xl font-bold text-brand-dark">All Orders</h2>
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <input id="search-input" type="text" placeholder="Search name, ID, phone..."
+            oninput="filterOrders()"
+            class="border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-gold/40 w-full sm:w-48">
+          <select id="status-filter" onchange="filterOrders()"
+            class="border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none bg-white">
+            <option value="">All Statuses</option>
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+            <option value="Dispatched">Dispatched</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <button onclick="exportCSV()" class="text-xs bg-brand-light border border-brand-gold/20 text-brand-dark px-4 py-2 rounded-xl hover:bg-brand-gold hover:text-white transition-colors flex items-center gap-1.5 justify-center">
+            <i class="fa-solid fa-file-csv"></i> CSV
+          </button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs min-w-[700px]">
+          <thead class="bg-brand-light border-b border-brand-gold/10">
+            <tr class="text-left">
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Order ID</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Date</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Customer</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Items</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Amount</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Payment</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500">Status</th>
+              <th class="px-4 py-3 font-semibold uppercase tracking-wider text-slate-500 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+      </div>
+      <div id="pagination" class="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-slate-100 no-print">
+        <span id="pagination-info" class="text-xs text-slate-400"></span>
+        <div class="flex gap-2">
+          <button id="prev-btn" onclick="changePage(-1)" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-brand-light transition-colors disabled:opacity-40" disabled>
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button id="next-btn" onclick="changePage(1)" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-brand-light transition-colors disabled:opacity-40" disabled>
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+      <div id="empty-orders" class="hidden py-16 text-center">
+        <i class="fa-solid fa-inbox text-4xl text-slate-200 mb-3 block"></i>
+        <p class="text-sm font-semibold text-slate-400">No orders yet</p>
+        <p class="text-xs text-slate-300 mt-1">Orders from the store will appear here automatically</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ORDER MODAL -->
+<div id="order-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeModal()">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white rounded-t-3xl z-10 no-print">
+      <h2 class="font-serif text-xl font-bold text-brand-dark" id="modal-title">Order Details</h2>
+      <button onclick="closeModal()" class="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
+        <i class="fa-solid fa-xmark text-slate-500"></i>
+      </button>
+    </div>
+    <div id="modal-body" class="p-6 space-y-5"></div>
+    <div class="px-6 pb-6 flex gap-3 no-print">
+      <button id="modal-dispatch-btn" onclick="dispatchFromModal()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors">Mark Dispatched</button>
+      <button onclick="printSlip()" class="flex-1 bg-brand-forest hover:bg-brand-dark text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors">
+        <i class="fa-solid fa-print mr-1"></i> Print Slip
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = 'neimozhi@admin2026';
+const LS_ORDERS = 'neimozhi_orders';
+const LS_AUTH = 'neimozhi_admin_auth';
+const PAGE_SIZE = 10;
+
+const PRODUCTS = {
+  'cow-ghee':    {name:'Classic Uthukuli Cow Ghee',   variants:{'250g':350,'500g':650,'1kg':1200}},
+  'pure-butter': {name:'Homemade Uthukuli Butter',    variants:{'250g':250,'500g':450,'1kg':850}},
+  'buffalo-ghee':{name:'Pure Buffalo Ghee',           variants:{'250g':380,'500g':700,'1kg':1300}},
+  'bilona-ghee': {name:'A2 Bilona Cow Ghee',          variants:{'250g':550,'500g':1000,'1kg':1900}}
+};
+
+let allOrders=[], filtered=[], currentPage=1, currentModalOrderId=null;
+
+function getOrders(){try{return JSON.parse(localStorage.getItem(LS_ORDERS)||'[]')}catch{return[]}}
+function saveOrders(o){localStorage.setItem(LS_ORDERS,JSON.stringify(o))}
+
+function checkAuth(){if(localStorage.getItem(LS_AUTH)==='true')showDashboard()}
+
+function attemptLogin(){
+  const pw=document.getElementById('admin-password').value;
+  if(pw===ADMIN_PASSWORD){localStorage.setItem(LS_AUTH,'true');showDashboard()}
+  else{
+    const f=document.getElementById('login-form');
+    f.classList.add('shake');
+    document.getElementById('login-error').classList.remove('hidden');
+    setTimeout(()=>f.classList.remove('shake'),400);
+  }
+}
+
+function logout(){
+  localStorage.removeItem(LS_AUTH);
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('admin-password').value='';
+  document.getElementById('login-error').classList.add('hidden');
+}
+
+function showDashboard(){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  loadDashboard();
+}
+
+function loadDashboard(){
+  allOrders=getOrders();
+  renderKPIs();
+  renderChart();
+  renderProducts();
+  filtered=[...allOrders];
+  currentPage=1;
+  renderTable();
+}
+
+function renderKPIs(){
+  const total=allOrders.length;
+  const rev=allOrders.reduce((s,o)=>s+(o.total||0),0);
+  const paid=allOrders.filter(o=>o.status==='Paid'||o.paymentId).length;
+  const todayStr=new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+  const today=allOrders.filter(o=>o.date===todayStr).length;
+  document.getElementById('kpi-total-orders').textContent=total;
+  document.getElementById('kpi-revenue').textContent='\u20B9'+rev.toLocaleString('en-IN');
+  document.getElementById('kpi-paid').textContent=paid;
+  document.getElementById('kpi-today').textContent=today;
+}
+
+function renderChart(){
+  const chartDiv=document.getElementById('revenue-chart');
+  const labelsDiv=document.getElementById('revenue-labels');
+  const revs=[],labels=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const label=d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+    const ds=d.toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+    const rev=allOrders.filter(o=>o.date===ds).reduce((s,o)=>s+(o.total||0),0);
+    revs.push(rev);labels.push(label);
+  }
+  const maxR=Math.max(...revs,1);
+  chartDiv.innerHTML=revs.map((r,i)=>{
+    const h=Math.max((r/maxR)*100,r>0?4:2);
+    return `<div class="flex-1 flex flex-col items-center gap-1 group relative h-full justify-end">
+      <div class="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] bg-brand-dark text-white px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">\u20B9${r.toLocaleString('en-IN')}</div>
+      <div class="w-full rounded-t-md bg-brand-gold/30 group-hover:bg-brand-gold transition-colors" style="height:${h}%"></div>
+    </div>`;
+  }).join('');
+  labelsDiv.innerHTML=labels.map(l=>`<div class="flex-1 text-center text-[9px] text-slate-400 truncate">${l}</div>`).join('');
+}
+
+function renderProducts(){
+  document.getElementById('product-list').innerHTML=Object.values(PRODUCTS).map(p=>{
+    const prices=Object.values(p.variants);
+    return `<div class="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
+      <div>
+        <p class="text-xs font-semibold text-brand-dark leading-tight">${p.name}</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">\u20B9${Math.min(...prices)} \u2013 \u20B9${Math.max(...prices)}</p>
+      </div>
+      <span class="text-[9px] font-bold uppercase tracking-wide bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full">Active</span>
+    </div>`;
+  }).join('');
+}
+
+function filterOrders(){
+  const q=document.getElementById('search-input').value.toLowerCase();
+  const s=document.getElementById('status-filter').value;
+  filtered=allOrders.filter(o=>{
+    const mq=!q||o.id.toLowerCase().includes(q)||(o.customer?.name||'').toLowerCase().includes(q)||(o.customer?.phone||'').includes(q);
+    const ms=!s||o.status===s;
+    return mq&&ms;
+  });
+  currentPage=1;
+  renderTable();
+}
+
+function renderTable(){
+  const tbody=document.getElementById('orders-tbody');
+  const empty=document.getElementById('empty-orders');
+  const info=document.getElementById('pagination-info');
+  const prev=document.getElementById('prev-btn');
+  const next=document.getElementById('next-btn');
+  if(!filtered.length){
+    tbody.innerHTML='';empty.classList.remove('hidden');
+    info.textContent='';prev.disabled=true;next.disabled=true;return;
+  }
+  empty.classList.add('hidden');
+  const tp=Math.ceil(filtered.length/PAGE_SIZE);
+  const s=(currentPage-1)*PAGE_SIZE;
+  const page=filtered.slice(s,s+PAGE_SIZE);
+  info.textContent=`Showing ${s+1}\u2013${Math.min(s+PAGE_SIZE,filtered.length)} of ${filtered.length}`;
+  prev.disabled=currentPage===1;next.disabled=currentPage===tp;
+  tbody.innerHTML=page.map(o=>{
+    const items=(o.items||[]).map(i=>`${i.name}(${i.weight}x${i.quantity})`).join(', ');
+    const is=items.length>40?items.slice(0,40)+'\u2026':items;
+    const pay=o.paymentId?`<span class="text-[10px] font-mono text-blue-600" title="${o.paymentId}">${o.paymentId.slice(0,12)}\u2026</span>`:`<span class="text-slate-300">\u2014</span>`;
+    return `<tr class="order-row border-b border-slate-50 cursor-pointer" onclick="viewOrder('${o.id}')">
+      <td class="px-4 py-3 font-mono text-brand-goldDark font-semibold text-[11px]">${o.id}</td>
+      <td class="px-4 py-3 text-slate-500 whitespace-nowrap">${o.date||'\u2014'}</td>
+      <td class="px-4 py-3"><div class="font-semibold text-brand-dark">${o.customer?.name||'\u2014'}</div><div class="text-slate-400">${o.customer?.phone||''}</div></td>
+      <td class="px-4 py-3 text-slate-500 max-w-[140px]" title="${items}">${is||'\u2014'}</td>
+      <td class="px-4 py-3 font-bold text-brand-dark">\u20B9${(o.total||0).toLocaleString('en-IN')}</td>
+      <td class="px-4 py-3">${pay}</td>
+      <td class="px-4 py-3">${badge(o.status)}</td>
+      <td class="px-4 py-3 text-center" onclick="event.stopPropagation()">
+        <div class="relative inline-block">
+          <button onclick="toggleMenu('m-${o.id}')" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-brand-light transition-colors flex items-center gap-1">
+            Actions <i class="fa-solid fa-chevron-down text-[9px]"></i>
+          </button>
+          <div id="m-${o.id}" class="hidden absolute right-0 mt-1 w-44 bg-white rounded-xl border border-slate-100 shadow-lg z-30 py-1 text-left">
+            <button onclick="closeMenus();viewOrder('${o.id}')" class="w-full px-4 py-2 text-xs hover:bg-brand-light flex items-center gap-2"><i class="fa-solid fa-eye w-4 text-brand-gold"></i>View Details</button>
+            <button onclick="closeMenus();updateStatus('${o.id}','Dispatched')" class="w-full px-4 py-2 text-xs hover:bg-brand-light flex items-center gap-2"><i class="fa-solid fa-truck w-4 text-blue-500"></i>Mark Dispatched</button>
+            <button onclick="closeMenus();updateStatus('${o.id}','Delivered')" class="w-full px-4 py-2 text-xs hover:bg-brand-light flex items-center gap-2"><i class="fa-solid fa-circle-check w-4 text-purple-500"></i>Mark Delivered</button>
+            <button onclick="closeMenus();printOrderSlip('${o.id}')" class="w-full px-4 py-2 text-xs hover:bg-brand-light flex items-center gap-2"><i class="fa-solid fa-print w-4 text-slate-500"></i>Print Slip</button>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function changePage(d){
+  currentPage=Math.max(1,Math.min(Math.ceil(filtered.length/PAGE_SIZE),currentPage+d));
+  renderTable();
+}
+function toggleMenu(id){closeMenus();document.getElementById(id)?.classList.toggle('hidden')}
+function closeMenus(){document.querySelectorAll('[id^="m-NMZ"]').forEach(m=>m.classList.add('hidden'))}
+document.addEventListener('click',e=>{if(!e.target.closest('[id^="m-"]')&&!e.target.closest('button[onclick*="toggleMenu"]'))closeMenus()});
+
+function badge(s){
+  const c={'Paid':'badge-paid','Pending':'badge-pending','Dispatched':'badge-dispatched','Delivered':'badge-delivered','Completed':'badge-completed'}[s]||'badge-pending';
+  return `<span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${c}">${s||'Pending'}</span>`;
+}
+
+function updateStatus(id,ns){
+  const o=getOrders();const i=o.findIndex(x=>x.id===id);
+  if(i>-1){o[i].status=ns;saveOrders(o);loadDashboard();showToast('Order marked as '+ns)}
+}
+
+function viewOrder(id){
+  closeMenus();
+  const o=getOrders().find(x=>x.id===id);if(!o)return;
+  currentModalOrderId=id;
+  document.getElementById('modal-title').textContent='Order: '+o.id;
+  const db=document.getElementById('modal-dispatch-btn');
+  if(o.status==='Delivered'){db.disabled=true;db.classList.add('opacity-40')}
+  else{db.disabled=false;db.classList.remove('opacity-40');db.textContent=o.status==='Dispatched'?'Mark Delivered':'Mark Dispatched'}
+  document.getElementById('modal-body').innerHTML=`
+    <div class="flex items-center gap-3 flex-wrap">
+      ${badge(o.status)}
+      ${o.paymentId?`<span class="text-[10px] bg-blue-50 border border-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-mono">${o.paymentId}</span>`:''}
+      ${o.paymentMethod?`<span class="text-[10px] bg-slate-50 border border-slate-100 text-slate-500 px-2 py-0.5 rounded-full">${o.paymentMethod.toUpperCase()}</span>`:''}
+    </div>
+    <div class="bg-brand-light rounded-2xl p-4 border border-brand-gold/10">
+      <h3 class="text-[10px] uppercase font-bold tracking-widest text-brand-goldDark mb-3">Customer Details</h3>
+      <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
+        <div><span class="text-slate-400">Name:</span> <strong>${o.customer?.name||'\u2014'}</strong></div>
+        <div><span class="text-slate-400">Phone:</span> <strong>${o.customer?.phone||'\u2014'}</strong></div>
+        <div><span class="text-slate-400">Email:</span> <strong>${o.customer?.email||'\u2014'}</strong></div>
+        <div><span class="text-slate-400">Pincode:</span> <strong>${o.customer?.pincode||'\u2014'}</strong></div>
+        <div class="col-span-2"><span class="text-slate-400">Address:</span> <strong>${o.customer?.street||''}, ${o.customer?.city||''}, ${o.customer?.state||''}</strong></div>
+        ${o.customer?.landmark?`<div class="col-span-2"><span class="text-slate-400">Landmark:</span> <strong>${o.customer.landmark}</strong></div>`:''}
+        ${o.customer?.notes?`<div class="col-span-2"><span class="text-slate-400">Notes:</span> <strong>${o.customer.notes}</strong></div>`:''}
+      </div>
+    </div>
+    <div>
+      <h3 class="text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-3">Ordered Items</h3>
+      <div class="space-y-2">
+        ${(o.items||[]).map(item=>`
+          <div class="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-3 border border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-lg overflow-hidden bg-brand-light border border-slate-200 flex-shrink-0 flex items-center justify-center">
+                <img src="${item.image||''}" class="w-full h-full object-cover" onerror="this.style.display='none'">
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-brand-dark">${item.name}</p>
+                <p class="text-[10px] text-slate-400">${item.weight} \xd7 ${item.quantity}</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold text-brand-dark">\u20B9${(item.price*item.quantity).toLocaleString('en-IN')}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="bg-white border border-slate-100 rounded-2xl p-4 space-y-2">
+      <div class="flex justify-between text-xs text-slate-500"><span>Subtotal</span><span>\u20B9${(o.subtotal||0).toLocaleString('en-IN')}</span></div>
+      <div class="flex justify-between text-xs text-slate-500"><span>Delivery</span><span>${o.delivery===0?'<span class="text-emerald-600 font-semibold">FREE</span>':'\u20B9'+(o.delivery||0)}</span></div>
+      <div class="flex justify-between text-sm font-bold text-brand-dark border-t border-slate-100 pt-2"><span>Total</span><span>\u20B9${(o.total||0).toLocaleString('en-IN')}</span></div>
+    </div>`;
+  document.getElementById('order-modal').classList.remove('hidden');
+}
+
+function closeModal(){document.getElementById('order-modal').classList.add('hidden');currentModalOrderId=null}
+
+function dispatchFromModal(){
+  if(!currentModalOrderId)return;
+  const o=getOrders().find(x=>x.id===currentModalOrderId);if(!o)return;
+  const ns=o.status==='Dispatched'?'Delivered':'Dispatched';
+  updateStatus(currentModalOrderId,ns);closeModal();
+}
+
+function printOrderSlip(id){const o=getOrders().find(x=>x.id===id);if(o)printSlipForOrder(o)}
+function printSlip(){if(currentModalOrderId)printOrderSlip(currentModalOrderId)}
+
+function printSlipForOrder(o){
+  const w=window.open('','_blank','width=600,height=800');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Slip - ${o.id}</title>
+  <style>body{font-family:Arial,sans-serif;padding:24px;color:#1C2816;max-width:480px;margin:0 auto}
+  .brand{text-align:center;margin-bottom:16px}.brand h1{font-size:22px;margin:0}
+  .brand p{font-size:10px;color:#C59B27;text-transform:uppercase;letter-spacing:2px;margin:4px 0 0}
+  hr{border:none;border-top:1px solid #e5e7eb;margin:10px 0}
+  .row{display:flex;justify-content:space-between;font-size:12px;margin:4px 0}
+  .label{color:#6b7280}table{width:100%;font-size:11px;border-collapse:collapse;margin:10px 0}
+  th{text-align:left;padding:5px 4px;border-bottom:1px solid #e5e7eb;color:#6b7280;font-size:9px;text-transform:uppercase}
+  td{padding:5px 4px;border-bottom:1px solid #f9fafb}
+  </style></head><body>
+  <div class="brand"><h1>NeiMozhi</h1><p>by Uthukuli | Premium Dairy</p></div>
+  <div class="row"><span class="label">Order ID:</span><strong>${o.id}</strong></div>
+  <div class="row"><span class="label">Date:</span><span>${o.date}</span></div>
+  ${o.paymentId?`<div class="row"><span class="label">Payment:</span><span style="font-size:10px">${o.paymentId}</span></div>`:''}
+  <div class="row"><span class="label">Status:</span><strong>${o.status}</strong></div>
+  <hr>
+  <strong style="font-size:10px;color:#6b7280;text-transform:uppercase">Deliver To</strong>
+  <div style="margin:6px 0;font-size:12px">
+    <strong>${o.customer?.name}</strong><br>
+    ${o.customer?.street}, ${o.customer?.city}<br>
+    ${o.customer?.state} &mdash; ${o.customer?.pincode}<br>
+    Ph: ${o.customer?.phone}
+    ${o.customer?.landmark?`<br>Landmark: ${o.customer.landmark}`:''}
+  </div>
+  <hr>
+  <table>
+    <tr><th>Item</th><th>Wt</th><th>Qty</th><th>Price</th></tr>
+    ${(o.items||[]).map(i=>`<tr><td>${i.name}</td><td>${i.weight}</td><td>${i.quantity}</td><td>&#8377;${i.price*i.quantity}</td></tr>`).join('')}
+  </table>
+  <hr>
+  <div class="row"><span class="label">Subtotal</span><span>&#8377;${o.subtotal||0}</span></div>
+  <div class="row"><span class="label">Delivery</span><span>${o.delivery===0?'FREE':'&#8377;'+(o.delivery||0)}</span></div>
+  <div class="row" style="font-size:16px;font-weight:bold"><span>Total</span><span>&#8377;${o.total||0}</span></div>
+  <hr>
+  <p style="text-align:center;font-size:10px;color:#9ca3af;margin-top:16px">Thank you for choosing NeiMozhi!<br>Pure. Fresh. Authentic.</p>
+  <script>window.onload=function(){window.print()}<\/script>
+  </body></html>`);w.document.close();
+}
+
+function exportCSV(){
+  const o=getOrders();if(!o.length){showToast('No orders to export','warn');return}
+  const H=['Order ID','Date','Name','Phone','Email','City','State','Pincode','Items','Subtotal','Delivery','Total','Payment ID','Status'];
+  const rows=o.map(x=>{
+    const items=(x.items||[]).map(i=>`${i.name}(${i.weight}x${i.quantity})`).join(';');
+    return [x.id,x.date,x.customer?.name||'',x.customer?.phone||'',x.customer?.email||'',
+      x.customer?.city||'',x.customer?.state||'',x.customer?.pincode||'',
+      items,x.subtotal||0,x.delivery||0,x.total||0,x.paymentId||'',x.status||''
+    ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',');
+  });
+  const csv=[H.join(','),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  Object.assign(document.createElement('a'),{href:url,download:`neimozhi-orders-${Date.now()}.csv`}).click();
+  URL.revokeObjectURL(url);showToast('Exported CSV!');
+}
+
+function showToast(msg,type='success'){
+  const el=document.createElement('div');
+  const c={success:'bg-emerald-600',error:'bg-red-500',warn:'bg-amber-500',info:'bg-blue-500'};
+  el.className=`fixed bottom-6 left-6 z-[999] ${c[type]||c.success} text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg flex items-center gap-2`;
+  el.innerHTML=`<i class="fa-solid fa-${type==='success'?'check':'circle-info'}"></i> ${msg}`;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),3000);
+}
+
+checkAuth();
+</script>
+</body>
+</html>

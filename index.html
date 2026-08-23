@@ -40,6 +40,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- AOS (Animate on Scroll) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <!-- Razorpay Checkout -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body class="bg-slate-50 text-brand-dark selection:bg-brand-gold selection:text-white">
 
@@ -96,7 +98,7 @@
     <!-- 1. HOME VIEW -->
     <section id="view-home" class="view-section active">
       <!-- Hero Section -->
-      <div class="relative min-h-screen lg:h-screen flex items-center pt-20 pb-8 lg:pb-16 px-6 md:px-12 lg:px-24 overflow-hidden bg-gradient-to-b from-[#FFFDF6] via-[#FAF6EB] to-slate-50">
+      <div class="relative min-h-screen lg:h-screen flex items-center pt-16 sm:pt-20 pb-6 lg:pb-16 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden bg-gradient-to-b from-[#FFFDF6] via-[#FAF6EB] to-slate-50">
         <div class="absolute top-1/2 left-3/4 -translate-y-1/2 w-[600px] h-[600px] bg-brand-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
         <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           
@@ -122,7 +124,7 @@
             </div>
 
             <!-- Trust Badges -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 w-full pt-6 md:pt-8 border-t border-brand-gold/15">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-6 w-full pt-4 sm:pt-6 md:pt-8 border-t border-brand-gold/15">
               <div class="flex items-center gap-2 sm:gap-3">
                 <div class="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-lg bg-amber-50 border border-brand-gold/10 flex items-center justify-center text-brand-gold">
                   <i class="fa-solid fa-box-open text-sm sm:text-lg"></i>
@@ -652,6 +654,8 @@
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
+  <!-- Configuration -->
+  <script src="assets/js/config.js"></script>
   <!-- Core script -->
   <script src="assets/js/neimozhi.js"></script>
 </body>

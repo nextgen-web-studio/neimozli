@@ -15,9 +15,9 @@ const PRODUCT_CATALOG = {
       'Additive': 'None (100% Preservative Free)',
     },
     images: [
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23FAF6EB"/><rect x="200" y="230" width="200" height="140" rx="14" fill="none" stroke="%23C59B27" stroke-width="2" stroke-dasharray="8,4"/><text x="300" y="210" font-family="serif" font-size="16" fill="%23C59B27" text-anchor="middle">Image Coming Soon</text><text x="300" y="285" font-size="40" text-anchor="middle">📷</text><text x="300" y="345" font-family="sans-serif" font-size="11" fill="%23888" text-anchor="middle">Classic Uthukuli Cow Ghee</text></svg>',
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23FAF6EB"/><rect x="200" y="230" width="200" height="140" rx="14" fill="none" stroke="%23C59B27" stroke-width="2" stroke-dasharray="8,4"/><text x="300" y="210" font-family="serif" font-size="16" fill="%23C59B27" text-anchor="middle">Image Coming Soon</text><text x="300" y="285" font-size="40" text-anchor="middle">📷</text><text x="300" y="345" font-family="sans-serif" font-size="11" fill="%23888" text-anchor="middle">Classic Uthukuli Cow Ghee</text></svg>',
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23FAF6EB"/><rect x="200" y="230" width="200" height="140" rx="14" fill="none" stroke="%23C59B27" stroke-width="2" stroke-dasharray="8,4"/><text x="300" y="210" font-family="serif" font-size="16" fill="%23C59B27" text-anchor="middle">Image Coming Soon</text><text x="300" y="285" font-size="40" text-anchor="middle">📷</text><text x="300" y="345" font-family="sans-serif" font-size="11" fill="%23888" text-anchor="middle">Classic Uthukuli Cow Ghee</text></svg>'
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='200' y='230' width='200' height='140' rx='14' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='210' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>Image Coming Soon</text><text x='300' y='285' font-size='40' text-anchor='middle'>📷</text><text x='300' y='345' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>Classic Uthukuli Cow Ghee</text></svg>",
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='200' y='230' width='200' height='140' rx='14' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='210' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>Image Coming Soon</text><text x='300' y='285' font-size='40' text-anchor='middle'>📷</text><text x='300' y='345' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>Classic Uthukuli Cow Ghee</text></svg>",
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='200' y='230' width='200' height='140' rx='14' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='210' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>Image Coming Soon</text><text x='300' y='285' font-size='40' text-anchor='middle'>📷</text><text x='300' y='345' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>Classic Uthukuli Cow Ghee</text></svg>"
     ],
     variants: {
       '250g': 350,
@@ -93,9 +93,9 @@ const PRODUCT_CATALOG = {
       'Nutrients': 'High in CLA and Omega-3',
     },
     images: [
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23FAF6EB"/><rect x="220" y="240" width="160" height="120" rx="12" fill="none" stroke="%23C59B27" stroke-width="2" stroke-dasharray="8,4"/><text x="300" y="220" font-family="serif" font-size="16" fill="%23C59B27" text-anchor="middle">Image Coming Soon</text><text x="300" y="290" font-size="36" text-anchor="middle">📷</text><text x="300" y="340" font-family="sans-serif" font-size="11" fill="%23888" text-anchor="middle">A2 Bilona Cow Ghee</text></svg>',
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23FAF6EB"/><rect x="220" y="240" width="160" height="120" rx="12" fill="none" stroke="%23C59B27" stroke-width="2" stroke-dasharray="8,4"/><text x="300" y="220" font-family="serif" font-size="16" fill="%23C59B27" text-anchor="middle">Image Coming Soon</text><text x="300" y="290" font-size="36" text-anchor="middle">📷</text><text x="300" y="340" font-family="sans-serif" font-size="11" fill="%23888" text-anchor="middle">A2 Bilona Cow Ghee</text></svg>',
-      'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="600" height="600" fill="%23FAF6EB"/><rect x="220" y="240" width="160" height="120" rx="12" fill="none" stroke="%23C59B27" stroke-width="2" stroke-dasharray="8,4"/><text x="300" y="220" font-family="serif" font-size="16" fill="%23C59B27" text-anchor="middle">Image Coming Soon</text><text x="300" y="290" font-size="36" text-anchor="middle">📷</text><text x="300" y="340" font-family="sans-serif" font-size="11" fill="%23888" text-anchor="middle">A2 Bilona Cow Ghee</text></svg>'
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='220' y='240' width='160' height='120' rx='12' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='220' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>Image Coming Soon</text><text x='300' y='290' font-size='36' text-anchor='middle'>📷</text><text x='300' y='340' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>A2 Bilona Cow Ghee</text></svg>",
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='220' y='240' width='160' height='120' rx='12' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='220' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>Image Coming Soon</text><text x='300' y='290' font-size='36' text-anchor='middle'>📷</text><text x='300' y='340' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>A2 Bilona Cow Ghee</text></svg>",
+      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='220' y='240' width='160' height='120' rx='12' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='220' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>Image Coming Soon</text><text x='300' y='290' font-size='36' text-anchor='middle'>📷</text><text x='300' y='340' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>A2 Bilona Cow Ghee</text></svg>"
     ],
     variants: {
       '250g': 550,
@@ -403,95 +403,121 @@ function renderProductDetails(productId) {
 
   container.innerHTML = `
     <!-- Back to store button -->
-    <div class="mb-8">
+    <div class="mb-6 sm:mb-8">
       <a href="#products" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-brand-dark transition-colors">
         <i class="fa-solid fa-arrow-left-long text-sm"></i> Back to product listing
       </a>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
       
-      <!-- Product Gallery Columns -->
-      <div class="lg:col-span-6 grid grid-cols-12 gap-4">
-        <!-- Thumbnail column -->
-        <div class="col-span-2 flex flex-col gap-3">
-          ${product.images.map((img, index) => `
-            <button onclick="switchDetailsImage('${img}', this)" class="thumbnail-btn border-2 ${index === 0 ? 'border-brand-gold' : 'border-transparent'} rounded-xl overflow-hidden aspect-square bg-white shadow-sm transition-all duration-200">
-              <img src="${img}" class="w-full h-full object-cover">
-            </button>
-          `).join('')}
+      <!-- Product Gallery -->
+      <div class="lg:col-span-6">
+        <!-- Mobile: main image on top, thumbnails below -->
+        <div class="block lg:hidden">
+          <div class="rounded-3xl overflow-hidden aspect-square bg-white border border-brand-gold/10 shadow-lg glow-gold mb-4">
+            <img id="details-main-img-mobile" src="${product.images[0]}" alt="${product.name}" class="w-full h-full object-cover">
+          </div>
+          <div class="flex gap-3 overflow-x-auto pb-2">
+            ${product.images.map((img, index) => {
+              const cleanedImg = img.replace(/'/g, "\\'");
+              return `
+                <button onclick="switchDetailsImage('${cleanedImg}', this)" class="thumbnail-btn flex-shrink-0 border-2 ${index === 0 ? 'border-brand-gold' : 'border-transparent'} rounded-xl overflow-hidden w-16 h-16 bg-white shadow-sm transition-all duration-200">
+                  <img src="${img}" class="w-full h-full object-cover">
+                </button>
+              `;
+            }).join('')}
+          </div>
         </div>
-        
-        <!-- Large image column -->
-        <div class="col-span-10">
-          <div class="rounded-3xl overflow-hidden aspect-[4/3] bg-white border border-brand-gold/10 shadow-lg relative glow-gold">
-            <img id="details-main-img" src="${product.images[0]}" alt="${product.name}" class="w-full h-full object-cover">
+        <!-- Desktop: side-by-side thumbnails + main image -->
+        <div class="hidden lg:grid grid-cols-12 gap-4">
+          <div class="col-span-2 flex flex-col gap-3">
+            ${product.images.map((img, index) => {
+              const cleanedImg = img.replace(/'/g, "\\'");
+              return `
+                <button onclick="switchDetailsImage('${cleanedImg}', this)" class="thumbnail-btn border-2 ${index === 0 ? 'border-brand-gold' : 'border-transparent'} rounded-xl overflow-hidden aspect-square bg-white shadow-sm transition-all duration-200">
+                  <img src="${img}" class="w-full h-full object-cover">
+                </button>
+              `;
+            }).join('')}
+          </div>
+          <div class="col-span-10">
+            <div class="rounded-3xl overflow-hidden aspect-[4/3] bg-white border border-brand-gold/10 shadow-lg relative glow-gold">
+              <img id="details-main-img" src="${product.images[0]}" alt="${product.name}" class="w-full h-full object-cover">
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Product Information Columns -->
+      <!-- Product Information -->
       <div class="lg:col-span-6 flex flex-col items-start">
         <span class="text-brand-gold font-semibold uppercase tracking-widest text-[10px] mb-2">${product.category}</span>
-        <h2 class="font-serif text-4xl font-bold text-brand-dark mb-4 leading-tight">${product.name}</h2>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-dark mb-3 leading-tight">${product.name}</h2>
         
-        <!-- Review Stars representation -->
-        <div class="flex items-center gap-2 mb-6">
+        <!-- Review Stars -->
+        <div class="flex items-center gap-2 mb-5">
           <div class="flex text-amber-400 text-xs">
             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           </div>
-          <span class="text-xs text-slate-400">(48 verified customer reviews)</span>
+          <span class="text-xs text-slate-400">(48 verified reviews)</span>
         </div>
 
-        <p class="text-slate-600 text-sm leading-relaxed mb-6">${product.longDescription}</p>
+        <p class="text-slate-600 text-sm leading-relaxed mb-5">${product.longDescription}</p>
 
-        <!-- Dynamic pricing variant selector -->
-        <div class="w-full border-t border-b border-brand-gold/10 py-6 mb-6">
+        <!-- Variant + Qty -->
+        <div class="w-full border-t border-b border-brand-gold/10 py-5 mb-5">
           <div class="mb-4">
             <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-3">Choose Pack Weight:</span>
-            <div class="flex gap-3">
+            <div class="flex flex-wrap gap-2 sm:gap-3">
               ${Object.keys(product.variants).map((wt, index) => `
-                <button onclick="selectDetailsVariant('${productId}', '${wt}', this)" class="details-variant-btn px-6 py-2.5 text-xs font-bold rounded-xl transition-all duration-200 ${index === 0 ? 'bg-amber-600 text-white shadow-md' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-55'}" data-variant="${wt}">
+                <button onclick="selectDetailsVariant('${productId}', '${wt}', this)" class="details-variant-btn px-4 sm:px-6 py-2.5 text-xs font-bold rounded-xl transition-all duration-200 ${index === 0 ? 'bg-amber-600 text-white shadow-md' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'}" data-variant="${wt}">
                   ${wt}
                 </button>
               `).join('')}
             </div>
           </div>
 
-          <div class="flex items-center justify-between mt-6">
+          <div class="flex items-center justify-between mt-5">
             <div>
               <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Total Amount</span>
               <div id="details-price-display" class="text-3xl font-serif font-bold text-brand-dark">₹${product.variants[detailsSelectedWeight]}</div>
             </div>
-
-            <!-- Quantity select wrapper -->
             <div>
               <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-2">Quantity</span>
               <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
-                <button onclick="adjustDetailsQty(-1, '${productId}')" class="px-4 py-2 font-bold text-slate-500 hover:bg-slate-50 transition-colors">-</button>
-                <span id="details-qty-val" class="px-5 font-bold text-brand-dark text-sm">1</span>
-                <button onclick="adjustDetailsQty(1, '${productId}')" class="px-4 py-2 font-bold text-slate-500 hover:bg-slate-50 transition-colors">+</button>
+                <button onclick="adjustDetailsQty(-1, '${productId}')" class="w-10 h-10 font-bold text-slate-500 hover:bg-slate-50 transition-colors flex items-center justify-center">-</button>
+                <span id="details-qty-val" class="px-4 font-bold text-brand-dark text-sm">1</span>
+                <button onclick="adjustDetailsQty(1, '${productId}')" class="w-10 h-10 font-bold text-slate-500 hover:bg-slate-50 transition-colors flex items-center justify-center">+</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Add to cart buttons -->
-        <button onclick="addDetailsToCart('${productId}')" class="w-full bg-brand-forest hover:bg-brand-dark text-white py-4 rounded-2xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-3 transition-all duration-300 glow-pulse">
-          <i class="fa-solid fa-basket-shopping text-base"></i> Add to Shopping Cart
-        </button>
+        <!-- Action Buttons -->
+        <div class="w-full flex flex-col sm:flex-row gap-3">
+          <button onclick="addDetailsToCart('${productId}')" class="flex-1 bg-brand-light border border-brand-gold/30 hover:bg-brand-gold hover:text-white text-brand-dark py-3.5 rounded-2xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300">
+            <i class="fa-solid fa-basket-shopping"></i> Add to Cart
+          </button>
+          <button onclick="buyNowDetails('${productId}')" class="flex-1 bg-brand-forest hover:bg-brand-dark text-white py-3.5 rounded-2xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-md">
+            <i class="fa-solid fa-bolt"></i> Buy Now
+          </button>
+        </div>
 
-        <!-- Accordion details section below -->
-        <div class="w-full mt-10 space-y-3">
-          
-          <!-- Spec Tab -->
+        <!-- Razorpay trust badge -->
+        <div class="flex items-center gap-2 mt-3">
+          <i class="fa-solid fa-lock text-[10px] text-slate-400"></i>
+          <span class="text-[10px] text-slate-400">Secured by Razorpay &bull; 100% safe checkout</span>
+        </div>
+
+        <!-- Accordion details -->
+        <div class="w-full mt-8 space-y-3">
           <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
+            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-base sm:text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
               <span>Product Specifications</span>
               <i class="fa-solid fa-chevron-down text-xs text-brand-gold transition-transform"></i>
             </button>
             <div class="accordion-content hidden p-5 border-t border-slate-100 text-xs text-slate-600 bg-slate-50/50">
-              <div class="grid grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 ${Object.entries(product.specifications).map(([key, val]) => `
                   <div>
                     <span class="text-slate-400 block uppercase text-[9px] tracking-wider font-bold">${key}</span>
@@ -502,9 +528,8 @@ function renderProductDetails(productId) {
             </div>
           </div>
 
-          <!-- Ingredients Tab -->
           <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
+            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-base sm:text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
               <span>Ingredients</span>
               <i class="fa-solid fa-chevron-down text-xs text-brand-gold transition-transform"></i>
             </button>
@@ -513,10 +538,9 @@ function renderProductDetails(productId) {
             </div>
           </div>
 
-          <!-- Shelf Life Tab -->
           <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
-              <span>Shelf Life & Storage</span>
+            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-base sm:text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
+              <span>Shelf Life &amp; Storage</span>
               <i class="fa-solid fa-chevron-down text-xs text-brand-gold transition-transform"></i>
             </button>
             <div class="accordion-content hidden p-5 border-t border-slate-100 text-xs text-slate-600 bg-slate-50/50">
@@ -524,28 +548,29 @@ function renderProductDetails(productId) {
             </div>
           </div>
 
-          <!-- Delivery info Tab -->
           <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
-              <span>Delivery & Shipping Info</span>
+            <button onclick="toggleDetailsAccordion(this)" class="w-full text-left py-4 px-5 font-serif text-base sm:text-lg font-bold text-brand-dark flex justify-between items-center hover:bg-slate-50">
+              <span>Delivery &amp; Shipping Info</span>
               <i class="fa-solid fa-chevron-down text-xs text-brand-gold transition-transform"></i>
             </button>
             <div class="accordion-content hidden p-5 border-t border-slate-100 text-xs text-slate-600 bg-slate-50/50">
               <p class="leading-relaxed text-slate-600 mb-2">We prepare all butter and ghee fresh by order. Preparation time takes 1-2 days.</p>
-              <p class="leading-relaxed text-slate-600"><strong>Pan India Shipping:</strong> Takes 3-5 working days. Free shipping for all orders weighing 1kg and above! Flat shipping of ₹80 for smaller packages.</p>
+              <p class="leading-relaxed text-slate-600"><strong>Pan India Shipping:</strong> Takes 3-5 working days. Free shipping for orders weighing 1kg and above! Flat ₹80 for smaller packages.</p>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
   `;
 }
 
+
 // Product Details helpers
 function switchDetailsImage(src, btnEl) {
-  document.getElementById('details-main-img').setAttribute('src', src);
+  const mainImg = document.getElementById('details-main-img');
+  if (mainImg) mainImg.setAttribute('src', src);
+  const mainImgMobile = document.getElementById('details-main-img-mobile');
+  if (mainImgMobile) mainImgMobile.setAttribute('src', src);
   document.querySelectorAll('.thumbnail-btn').forEach(btn => {
     btn.classList.add('border-transparent');
     btn.classList.remove('border-brand-gold');
@@ -598,6 +623,11 @@ function toggleDetailsAccordion(btn) {
 function addDetailsToCart(productId) {
   const product = PRODUCT_CATALOG[productId];
   addToCart(productId, product.name, detailsSelectedWeight, product.variants[detailsSelectedWeight], detailsQuantity, product.images[0]);
+}
+
+function buyNowDetails(productId) {
+  addDetailsToCart(productId);
+  window.location.hash = '#checkout';
 }
 
 // Shared Cart Operations
@@ -847,72 +877,120 @@ function renderCheckout() {
   `;
 }
 
-// Create & Submit Order
+// Create & Submit Order — collects form data then opens Razorpay
 function submitOrder() {
-  // Validate Form Inputs
   const form = document.getElementById('checkout-form');
   if (!form) return;
 
-  const name = document.getElementById('input-name').value.trim();
-  const phone = document.getElementById('input-phone').value.trim();
-  const email = document.getElementById('input-email').value.trim();
-  const street = document.getElementById('input-street').value.trim();
-  const city = document.getElementById('input-city').value.trim();
-  const state = document.getElementById('input-state').value.trim();
-  const pincode = document.getElementById('input-pincode').value.trim();
+  const name     = document.getElementById('input-name').value.trim();
+  const phone    = document.getElementById('input-phone').value.trim();
+  const email    = document.getElementById('input-email').value.trim();
+  const street   = document.getElementById('input-street').value.trim();
+  const city     = document.getElementById('input-city').value.trim();
+  const state    = document.getElementById('input-state').value.trim();
+  const pincode  = document.getElementById('input-pincode').value.trim();
   const landmark = document.getElementById('input-landmark').value.trim();
-  const notes = document.getElementById('input-notes').value.trim();
+  const notes    = document.getElementById('input-notes').value.trim();
 
   if (!name || !phone || !email || !street || !city || !state || !pincode) {
-    alert('Please fill out all required shipping information fields!');
+    showToast('Please fill all required fields!', 'error');
     return;
   }
 
-  // Compile calculations
+  // Compile totals
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
   let totalWeightGrams = 0;
   cart.forEach(item => {
-    let wt = item.weight.toLowerCase();
-    let qty = item.quantity;
-    if (wt.includes('kg')) {
-      totalWeightGrams += parseFloat(wt) * 1000 * qty;
-    } else {
-      totalWeightGrams += parseFloat(wt) * qty;
-    }
+    const wt  = item.weight.toLowerCase();
+    const qty = item.quantity;
+    totalWeightGrams += wt.includes('kg')
+      ? parseFloat(wt) * 1000 * qty
+      : parseFloat(wt) * qty;
   });
-
   const deliveryCharge = totalWeightGrams >= 1000 ? 0 : 80;
-  const grandTotal = subtotal + deliveryCharge;
+  const grandTotal     = subtotal + deliveryCharge;
 
-  // Generate unique Order ID
-  const randomNum = Math.floor(100000 + Math.random() * 900000);
-  const orderId = `NMZ-2026-${randomNum}`;
+  // Launch Razorpay modal
+  initiateRazorpayPayment({
+    amount: grandTotal,
+    customer: { name, phone, email, street, city, state, pincode, landmark, notes },
+    subtotal, deliveryCharge, grandTotal
+  });
+}
 
-  // Assemble Order Object
-  const newOrder = {
-    id: orderId,
-    date: new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }),
-    customer: {
-      name, phone, email, street, city, state, pincode, landmark, notes
+// Razorpay Payment Handler
+function initiateRazorpayPayment(orderData) {
+  // Guard: make sure Razorpay script actually loaded
+  if (typeof Razorpay === 'undefined') {
+    showToast('Payment gateway not loaded. Check your internet connection and try again.', 'error');
+    const btn = document.querySelector('#checkout-summary-sidebar button');
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Pay Now <i class="fa-solid fa-lock text-[10px]"></i>'; }
+    return;
+  }
+
+  const btn = document.querySelector('#checkout-summary-sidebar button');
+  if (btn) { btn.disabled = true; btn.textContent = 'Opening Payment…'; }
+
+  const options = {
+    key: 'rzp_test_TMkPB4Kf0yKrRE',
+    amount: Math.round(orderData.amount * 100),   // paise, must be integer
+    currency: 'INR',
+    name: 'NeiMozhi by Uthukuli',
+    description: 'Premium Ghee & Dairy Order',
+    image: window.location.origin + '/assets/images/logo_neimozhi.jpg',
+    prefill: {
+      name:    orderData.customer.name,
+      email:   orderData.customer.email,
+      contact: orderData.customer.phone
     },
-    items: [...cart],
-    subtotal,
-    delivery: deliveryCharge,
-    total: grandTotal,
-    status: 'Completed'
+    notes: {
+      address: `${orderData.customer.street}, ${orderData.customer.city}`
+    },
+    theme: { color: '#C59B27' },
+    modal: {
+      backdropclose: false,
+      ondismiss: function () {
+        if (btn) { btn.disabled = false; btn.innerHTML = 'Pay Now <i class="fa-solid fa-lock text-[10px]"></i>'; }
+        showToast('Payment cancelled. Your cart is safe.', 'info');
+      }
+    },
+    handler: function (response) {
+      // Payment successful — save order
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+      const orderId   = `NMZ-2026-${randomNum}`;
+      const newOrder  = {
+        id:            orderId,
+        date:          new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }),
+        timestamp:     Date.now(),
+        customer:      orderData.customer,
+        items:         [...cart],
+        subtotal:      orderData.subtotal,
+        delivery:      orderData.deliveryCharge,
+        total:         orderData.grandTotal,
+        status:        'Paid',
+        paymentId:     response.razorpay_payment_id,
+        paymentMethod: 'razorpay'
+      };
+      orders.unshift(newOrder);
+      saveOrders();
+      cart = [];
+      saveCart();
+      window.location.hash = `#order-confirmation/${orderId}`;
+    }
   };
 
-  // Save to list
-  orders.unshift(newOrder);
-  saveOrders();
-
-  // Clear Cart
-  cart = [];
-  saveCart();
-
-  // Navigate to confirmation page
-  window.location.hash = `#order-confirmation/${orderId}`;
+  try {
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (resp) {
+      if (btn) { btn.disabled = false; btn.innerHTML = 'Pay Now <i class="fa-solid fa-lock text-[10px]"></i>'; }
+      showToast(`Payment failed: ${resp.error.description}`, 'error');
+    });
+    rzp.open();
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Pay Now <i class="fa-solid fa-lock text-[10px]"></i>'; }
+    showToast('Could not open payment. Please check console for details.', 'error');
+    console.error('[Razorpay Error]', e);
+  }
 }
 
 // View: ORDER CONFIRMATION
