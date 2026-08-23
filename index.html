@@ -577,6 +577,45 @@
       </div>
     </section>
 
+    <!-- 9. ACCOUNT SETTINGS VIEW -->
+    <section id="view-account-settings" class="view-section py-24 px-6 md:px-12 lg:px-24">
+      <div class="max-w-xl mx-auto">
+        <h2 class="font-serif text-4xl font-bold text-brand-dark mb-2">Account Settings</h2>
+        <p class="text-xs text-slate-400 mb-8">Update your profile information and custom avatar image.</p>
+        
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8 space-y-6">
+          <div class="flex flex-col items-center text-center pb-6 border-b border-slate-100">
+            <div class="relative group">
+              <img id="settings-avatar-preview" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" class="h-24 w-24 rounded-full object-cover border-4 border-brand-gold/30 shadow-md">
+              <button onclick="triggerAvatarSelect()" class="absolute bottom-0 right-0 h-8 w-8 bg-brand-forest hover:bg-brand-dark text-white rounded-full flex items-center justify-center border-2 border-white shadow transition-all">
+                <i class="fa-solid fa-camera text-xs"></i>
+              </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Click camera to pick a mock profile avatar</p>
+          </div>
+
+          <form id="settings-form" onsubmit="saveAccountSettings(event)" class="space-y-4">
+            <div class="flex flex-col">
+              <label class="text-[9px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Full Name</label>
+              <input type="text" id="settings-name" required class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+            </div>
+            <div class="flex flex-col">
+              <label class="text-[9px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">Email Address</label>
+              <input type="email" id="settings-email" readonly class="px-4 py-3 rounded-xl border border-slate-100 text-xs font-medium bg-slate-100 text-slate-400 cursor-not-allowed">
+            </div>
+            <div class="flex flex-col">
+              <label class="text-[9px] uppercase font-bold tracking-wider text-slate-400 mb-1.5">New Password (leave blank to keep current)</label>
+              <input type="password" id="settings-pass" placeholder="••••••••" class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-gold text-xs font-medium bg-slate-50">
+            </div>
+            <div class="flex gap-3 pt-2">
+              <button type="submit" class="flex-1 bg-brand-forest hover:bg-brand-dark text-white py-3 rounded-xl font-bold uppercase tracking-wider text-xs shadow transition-colors">Save Changes</button>
+              <a href="#home" class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 text-center py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-colors">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ================= POPUP AUTHENTICATION MODAL ================= -->

@@ -207,6 +207,9 @@ function handleRoute() {
   } else if (route === '#track-order' && param) {
     document.getElementById('view-track-order').classList.add('active');
     renderTrackOrder(param);
+  } else if (route === '#account-settings') {
+    document.getElementById('view-account-settings').classList.add('active');
+    renderAccountSettings();
   } else {
     // Default to home
     document.getElementById('view-home').classList.add('active');
@@ -1315,6 +1318,24 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // Real-time synchronization across browser tabs (Admin <-> Store)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'neimozhi_orders') {
+      loadState(); // reload local orders variable
+      const hash = window.location.hash || '#home';
+      // If currently on order history, order confirmation or tracking page, immediately re-render to reflect changes
+      if (hash.startsWith('#order-history')) {
+        renderOrderHistory();
+      } else if (hash.startsWith('#track-order')) {
+        const orderId = hash.split('/')[1];
+        if (orderId) renderTrackOrder(orderId);
+      } else if (hash.startsWith('#order-confirmation')) {
+        const orderId = hash.split('/')[1];
+        if (orderId) renderOrderConfirmation(orderId);
+      }
+    }
+  });
 });
 
 window.playPrepVideo = function() {
@@ -1473,23 +1494,120 @@ function updateUserHeaderUI() {
   const desktopHeader = document.getElementById('user-header-profile');
   const mobileHeader = document.getElementById('mobile-user-header-profile');
 
+  // ONLY profile pic shown in the header as requested. Dropdown shows actions.
   const profileHTML = currentUser ? `
-    <div class="flex items-center gap-2 group relative cursor-pointer py-1">
-      <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&q=80'}" alt="Avatar" class="h-8 w-8 rounded-full border border-brand-gold/30 object-cover">
-      <span class="text-xs font-semibold text-brand-dark max-w-[100px] truncate hidden md:inline">${currentUser.name}</span>
-      <button onclick="logoutUser()" class="hover:text-rose-600 text-[10px] uppercase font-bold tracking-wider ml-1" title="Sign Out"><i class="fa-solid fa-power-off"></i></button>
+    <div class="relative inline-block text-left">
+      <button onclick="toggleProfileDropdown(event)" class="h-9 w-9 rounded-full overflow-hidden border border-brand-gold/40 hover:border-brand-gold shadow-md focus:outline-none flex items-center justify-center">
+        <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&q=80'}" alt="Avatar" class="h-full w-full object-cover">
+      </button>
+      <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 py-2">
+        <div class="px-4 py-2 border-b border-slate-50">
+          <p class="text-xs font-bold text-brand-dark truncate">${currentUser.name}</p>
+          <p class="text-[9px] text-slate-400 truncate">${currentUser.email}</p>
+        </div>
+        <a href="#account-settings" onclick="closeDropdowns()" class="block px-4 py-2 text-xs text-slate-600 hover:bg-brand-light flex items-center gap-2 font-medium"><i class="fa-solid fa-user-gear text-brand-gold"></i> Settings</a>
+        <a href="#order-history" onclick="closeDropdowns()" class="block px-4 py-2 text-xs text-slate-600 hover:bg-brand-light flex items-center gap-2 font-medium"><i class="fa-solid fa-clock-rotate-left text-brand-gold"></i> Orders</a>
+        <button onclick="closeDropdowns();logoutUser()" class="w-full text-left px-4 py-2 text-xs text-rose-500 hover:bg-rose-50 flex items-center gap-2 font-medium border-t border-slate-50 mt-1"><i class="fa-solid fa-power-off"></i> Sign Out</button>
+      </div>
     </div>
   ` : `<button onclick="openAuthModal()" class="bg-brand-forest hover:bg-brand-dark text-white px-4 py-2 rounded-full font-bold uppercase tracking-wider text-[10px] transition-all">Sign In</button>`;
 
   if (desktopHeader) desktopHeader.innerHTML = profileHTML;
   if (mobileHeader) mobileHeader.innerHTML = currentUser ? `
-    <div class="flex flex-col items-center gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-      <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80'}" alt="Avatar" class="h-10 w-10 rounded-full border border-brand-gold/30 object-cover">
+    <div class="flex flex-col items-center gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+      <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80'}" alt="Avatar" class="h-12 w-12 rounded-full border border-brand-gold/30 object-cover shadow">
       <span class="text-xs font-bold text-brand-dark">${currentUser.name}</span>
-      <button onclick="logoutUser()" class="text-xs text-rose-500 font-bold uppercase mt-1">Sign Out</button>
+      <div class="flex gap-2 mt-2 w-full">
+        <a href="#account-settings" class="flex-1 bg-white border border-slate-200 text-slate-600 text-center py-1.5 rounded-lg text-[10px] font-bold uppercase">Settings</a>
+        <button onclick="logoutUser()" class="flex-1 bg-rose-50 text-rose-500 text-center py-1.5 rounded-lg text-[10px] font-bold uppercase">Sign Out</button>
+      </div>
     </div>
   ` : `<button onclick="openAuthModal()" class="w-full bg-brand-forest text-white py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider">Sign In</button>`;
 }
+
+window.toggleProfileDropdown = function(e) {
+  e.stopPropagation();
+  const dropdown = document.getElementById('profile-dropdown-menu');
+  if (dropdown) {
+    dropdown.classList.toggle('hidden');
+  }
+};
+
+window.closeDropdowns = function() {
+  const dropdown = document.getElementById('profile-dropdown-menu');
+  if (dropdown) dropdown.classList.add('hidden');
+};
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#user-header-profile')) {
+    window.closeDropdowns();
+  }
+});
+
+// ================= ACCOUNT SETTINGS PAGE =================
+window.renderAccountSettings = function() {
+  if (!currentUser) {
+    showToast('Please sign in to access settings.', 'error');
+    window.location.hash = '#home';
+    return;
+  }
+  document.getElementById('settings-name').value = currentUser.name;
+  document.getElementById('settings-email').value = currentUser.email;
+  document.getElementById('settings-pass').value = '';
+  document.getElementById('settings-avatar-preview').src = currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80';
+};
+
+window.triggerAvatarSelect = function() {
+  // Let the user pick from a set of mockup avatars dynamically
+  const avatars = [
+    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80',
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80',
+    'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&q=80',
+    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80'
+  ];
+  // Select next mock avatar sequentially
+  const currentSrc = document.getElementById('settings-avatar-preview').src;
+  let nextIdx = 0;
+  const currentIdx = avatars.indexOf(currentSrc);
+  if (currentIdx !== -1) {
+    nextIdx = (currentIdx + 1) % avatars.length;
+  }
+  document.getElementById('settings-avatar-preview').src = avatars[nextIdx];
+  showToast('Mock profile avatar changed!');
+};
+
+window.saveAccountSettings = function(event) {
+  event.preventDefault();
+  if (!currentUser) return;
+
+  const newName = document.getElementById('settings-name').value.trim();
+  const newPass = document.getElementById('settings-pass').value;
+  const newAvatar = document.getElementById('settings-avatar-preview').src;
+
+  const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+  const userIdx = users.findIndex(u => u.email === currentUser.email);
+
+  if (userIdx !== -1) {
+    users[userIdx].name = newName;
+    users[userIdx].avatar = newAvatar;
+    if (newPass.length >= 6) {
+      users[userIdx].pass = newPass;
+    }
+    localStorage.setItem('neimozhi_users', JSON.stringify(users));
+  }
+
+  // Update current session
+  currentUser.name = newName;
+  currentUser.avatar = newAvatar;
+  if (newPass.length >= 6) {
+    currentUser.pass = newPass;
+  }
+  localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+
+  showToast('Profile settings saved successfully!');
+  updateUserHeaderUI();
+  window.location.hash = '#home';
+};
 
 // ================= AMAZON-STYLE TRACKING VIEW =================
 function renderTrackOrder(orderId) {
