@@ -358,7 +358,11 @@ function filterOrders(){
   const q=document.getElementById('search-input').value.toLowerCase();
   const s=document.getElementById('status-filter').value;
   filtered=allOrders.filter(o=>{
-    const mq=!q||o.id.toLowerCase().includes(q)||(o.customer?.name||'').toLowerCase().includes(q)||(o.customer?.phone||'').includes(q);
+    const mq=!q||
+             o.id.toLowerCase().includes(q)||
+             (o.customer?.name||'').toLowerCase().includes(q)||
+             (o.customer?.phone||'').includes(q)||
+             (o.customer?.email||'').toLowerCase().includes(q);
     const ms=!s||o.status===s;
     return mq&&ms;
   });
