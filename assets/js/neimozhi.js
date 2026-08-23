@@ -1816,6 +1816,13 @@ function updateUserHeaderUI() {
       </div>
     ` : '';
   }
+
+  // Restore the dynamic menu list authentication actions status
+  if (mobileHeader) {
+    mobileHeader.innerHTML = currentUser 
+      ? '' 
+      : `<button onclick="closeDropdowns();openAuthModal()" class="w-full bg-brand-forest text-white py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider">Sign In</button>`;
+  }
 }
 
 window.toggleProfileDropdown = function(e) {
