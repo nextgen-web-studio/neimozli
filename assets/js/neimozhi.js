@@ -1797,44 +1797,44 @@ function updateUserHeaderUI() {
 
   if (desktopHeader) desktopHeader.innerHTML = profileHTML;
 
-  // Add profile initials badge to top mobile header row when logged in
+  // Add profile initials badge to top mobile header row when logged in with toggleable dropdown
   if (mobileAvatarHeader) {
     mobileAvatarHeader.innerHTML = currentUser ? `
-      <a href="#account-settings" class="h-8 w-8 rounded-full border-2 border-brand-gold bg-brand-light flex items-center justify-center font-bold text-brand-goldDark text-xs shadow-sm block mr-1 text-center leading-7">
-        ${getInitial(currentUser.name)}
-      </a>
+      <div class="relative inline-block text-left">
+        <button onclick="toggleProfileDropdown(event)" class="h-8 w-8 rounded-full border-2 border-brand-gold bg-brand-light flex items-center justify-center font-bold text-brand-goldDark text-xs shadow-sm focus:outline-none leading-7">
+          ${getInitial(currentUser.name)}
+        </button>
+        <div id="profile-dropdown-menu-mobile" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 py-2">
+          <div class="px-4 py-2 border-b border-slate-50">
+            <p class="text-xs font-bold text-brand-dark truncate">${currentUser.name}</p>
+            <p class="text-[9px] text-slate-400 truncate">${currentUser.email}</p>
+          </div>
+          <a href="#account-settings" onclick="closeDropdowns()" class="block px-4 py-2 text-xs text-slate-600 hover:bg-brand-light flex items-center gap-2 font-medium"><i class="fa-solid fa-user-gear text-brand-gold"></i> Settings</a>
+          <a href="#order-history" onclick="closeDropdowns()" class="block px-4 py-2 text-xs text-slate-600 hover:bg-brand-light flex items-center gap-2 font-medium"><i class="fa-solid fa-clock-rotate-left text-brand-gold"></i> Orders</a>
+          <button onclick="closeDropdowns();logoutUser()" class="w-full text-left px-4 py-2 text-xs text-rose-500 hover:bg-rose-50 flex items-center gap-2 font-medium border-t border-slate-50 mt-1"><i class="fa-solid fa-power-off"></i> Sign Out</button>
+        </div>
+      </div>
     ` : '';
   }
-
-  if (mobileHeader) mobileHeader.innerHTML = currentUser ? `
-    <div class="flex flex-col items-center gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-      <div class="h-12 w-12 rounded-full border-2 border-brand-gold bg-brand-light flex items-center justify-center font-bold text-brand-goldDark text-lg shadow-md">
-        ${getInitial(currentUser.name)}
-      </div>
-      <span class="text-xs font-bold text-brand-dark">${currentUser.name}</span>
-      <div class="flex gap-2 mt-2 w-full">
-        <a href="#account-settings" class="flex-1 bg-white border border-slate-200 text-slate-600 text-center py-1.5 rounded-lg text-[10px] font-bold uppercase">Settings</a>
-        <button onclick="logoutUser()" class="flex-1 bg-rose-50 text-rose-500 text-center py-1.5 rounded-lg text-[10px] font-bold uppercase">Sign Out</button>
-      </div>
-    </div>
-  ` : `<button onclick="openAuthModal()" class="w-full bg-brand-forest text-white py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider">Sign In</button>`;
 }
 
 window.toggleProfileDropdown = function(e) {
   e.stopPropagation();
-  const dropdown = document.getElementById('profile-dropdown-menu');
-  if (dropdown) {
-    dropdown.classList.toggle('hidden');
-  }
+  const dMenu = document.getElementById('profile-dropdown-menu');
+  const mMenu = document.getElementById('profile-dropdown-menu-mobile');
+  if (dMenu) dMenu.classList.toggle('hidden');
+  if (mMenu) mMenu.classList.toggle('hidden');
 };
 
 window.closeDropdowns = function() {
-  const dropdown = document.getElementById('profile-dropdown-menu');
-  if (dropdown) dropdown.classList.add('hidden');
+  const dMenu = document.getElementById('profile-dropdown-menu');
+  const mMenu = document.getElementById('profile-dropdown-menu-mobile');
+  if (dMenu) dMenu.classList.add('hidden');
+  if (mMenu) mMenu.classList.add('hidden');
 };
 
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('#user-header-profile')) {
+  if (!e.target.closest('#user-header-profile') && !e.target.closest('#mobile-user-header-profile-avatar')) {
     window.closeDropdowns();
   }
 });
