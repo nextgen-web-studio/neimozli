@@ -124,9 +124,24 @@ function loadState() {
   // Apply dynamic catalog edits made inside admin panel
   const catalogUpdates = JSON.parse(localStorage.getItem('neimozhi_catalog_updates') || '{}');
   Object.entries(catalogUpdates).forEach(([prodId, updates]) => {
-    if (PRODUCT_CATALOG[prodId]) {
+    if (updates.deleted) {
+      delete PRODUCT_CATALOG[prodId];
+    } else if (PRODUCT_CATALOG[prodId]) {
       PRODUCT_CATALOG[prodId].name = updates.name;
       PRODUCT_CATALOG[prodId].variants = {...updates.variants};
+    } else {
+      // It's a new product added via Admin Panel
+      PRODUCT_CATALOG[prodId] = {
+        name: updates.name,
+        variants: {...updates.variants},
+        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><rect width='600' height='600' fill='%23FAF6EB'/><rect x='220' y='240' width='160' height='120' rx='12' fill='none' stroke='%23C59B27' stroke-width='2' stroke-dasharray='8,4'/><text x='300' y='220' font-family='serif' font-size='16' fill='%23C59B27' text-anchor='middle'>NeiMozhi Premium</text><text x='300' y='290' font-size='36' text-anchor='middle'>🍯</text><text x='300' y='340' font-family='sans-serif' font-size='11' fill='%23888' text-anchor='middle'>Organic Traditional Ghee</text></svg>",
+        description: "Fresh premium traditional cow ghee, Vedic Bilona curd-churned wood-fired slow heated.",
+        details: {
+          'Source': 'Kangayam A2 Cow breed',
+          'Process': 'Vedic Bilona',
+          'Nutrients': 'Pure Nutritious Fats'
+        }
+      };
     }
   });
 
@@ -1757,11 +1772,16 @@ function updateUserHeaderUI() {
   const mobileHeader = document.getElementById('mobile-user-header-profile');
   const mobileAvatarHeader = document.getElementById('mobile-user-header-profile-avatar');
 
-  // ONLY profile pic shown in the header as requested. Dropdown shows actions.
+  // Helper: Get user's first letter
+  const getInitial = (name) => {
+    return (name || 'U').trim().charAt(0).toUpperCase();
+  };
+
+  // ONLY profile initials badge shown in the header as requested. Dropdown shows actions.
   const profileHTML = currentUser ? `
     <div class="relative inline-block text-left">
-      <button onclick="toggleProfileDropdown(event)" class="h-9 w-9 rounded-full overflow-hidden border border-brand-gold/40 hover:border-brand-gold shadow-md focus:outline-none flex items-center justify-center">
-        <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&q=80'}" alt="Avatar" class="h-full w-full object-cover">
+      <button onclick="toggleProfileDropdown(event)" class="h-9 w-9 rounded-full overflow-hidden border-2 border-brand-gold bg-brand-light flex items-center justify-center font-bold text-brand-goldDark text-sm shadow-md focus:outline-none">
+        ${getInitial(currentUser.name)}
       </button>
       <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 py-2">
         <div class="px-4 py-2 border-b border-slate-50">
@@ -1777,18 +1797,20 @@ function updateUserHeaderUI() {
 
   if (desktopHeader) desktopHeader.innerHTML = profileHTML;
 
-  // Add profile pic to top mobile header row when logged in
+  // Add profile initials badge to top mobile header row when logged in
   if (mobileAvatarHeader) {
     mobileAvatarHeader.innerHTML = currentUser ? `
-      <a href="#account-settings" class="h-8 w-8 rounded-full overflow-hidden border border-brand-gold/40 shadow-sm block mr-1">
-        <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&q=80'}" class="h-full w-full object-cover">
+      <a href="#account-settings" class="h-8 w-8 rounded-full border-2 border-brand-gold bg-brand-light flex items-center justify-center font-bold text-brand-goldDark text-xs shadow-sm block mr-1 text-center leading-7">
+        ${getInitial(currentUser.name)}
       </a>
     ` : '';
   }
 
   if (mobileHeader) mobileHeader.innerHTML = currentUser ? `
     <div class="flex flex-col items-center gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-      <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80'}" alt="Avatar" class="h-12 w-12 rounded-full border border-brand-gold/30 object-cover shadow">
+      <div class="h-12 w-12 rounded-full border-2 border-brand-gold bg-brand-light flex items-center justify-center font-bold text-brand-goldDark text-lg shadow-md">
+        ${getInitial(currentUser.name)}
+      </div>
       <span class="text-xs font-bold text-brand-dark">${currentUser.name}</span>
       <div class="flex gap-2 mt-2 w-full">
         <a href="#account-settings" class="flex-1 bg-white border border-slate-200 text-slate-600 text-center py-1.5 rounded-lg text-[10px] font-bold uppercase">Settings</a>
