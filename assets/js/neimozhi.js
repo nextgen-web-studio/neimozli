@@ -830,24 +830,8 @@ function renderCheckout() {
     return;
   }
 
-  // Pre-fill inputs with user details and saved address if available
-  setTimeout(() => {
-    const inputName = document.getElementById('input-name');
-    const inputEmail = document.getElementById('input-email');
-    if (inputName) inputName.value = currentUser.name || '';
-    if (inputEmail) inputEmail.value = currentUser.email || '';
-
-    // Auto-populate saved address fields if they exist on the account
-    if (currentUser.address) {
-      const addr = currentUser.address;
-      if (document.getElementById('input-phone')) document.getElementById('input-phone').value = addr.phone || '';
-      if (document.getElementById('input-street')) document.getElementById('input-street').value = addr.street || '';
-      if (document.getElementById('input-city')) document.getElementById('input-city').value = addr.city || '';
-      if (document.getElementById('input-state')) document.getElementById('input-state').value = addr.state || '';
-      if (document.getElementById('input-pincode')) document.getElementById('input-pincode').value = addr.pincode || '';
-      if (document.getElementById('input-landmark')) document.getElementById('input-landmark').value = addr.landmark || '';
-    }
-  }, 50);
+  // Render address book selector card HTML
+  renderAddressBook();
 
   // Render checkout sidebar summary
   const sidebar = document.getElementById('checkout-summary-sidebar');
@@ -922,22 +906,43 @@ function renderCheckout() {
 
 // Create & Submit Order — collects form data then opens Razorpay
 function submitOrder() {
-  const form = document.getElementById('checkout-form');
-  if (!form) return;
+  if (!currentUser) return;
 
-  const name     = document.getElementById('input-name').value.trim();
-  const phone    = document.getElementById('input-phone').value.trim();
-  const email    = document.getElementById('input-email').value.trim();
-  const street   = document.getElementById('input-street').value.trim();
-  const city     = document.getElementById('input-city').value.trim();
-  const state    = document.getElementById('input-state').value.trim();
-  const pincode  = document.getElementById('input-pincode').value.trim();
-  const landmark = document.getElementById('input-landmark').value.trim();
-  const notes    = document.getElementById('input-notes').value.trim();
+  let selectedAddress = null;
 
-  if (!name || !phone || !email || !street || !city || !state || !pincode) {
-    showToast('Please fill all required fields!', 'error');
-    return;
+  // If using a saved address, read it
+  if (currentUser.addresses && currentUser.addresses.length > 0 && selectedAddressIdx !== -1) {
+    selectedAddress = currentUser.addresses[selectedAddressIdx];
+  } else {
+    // If filling a new address, compile it
+    const name     = document.getElementById('input-name').value.trim();
+    const phone    = document.getElementById('input-phone').value.trim();
+    const email    = document.getElementById('input-email').value.trim();
+    const street   = document.getElementById('input-street').value.trim();
+    const city     = document.getElementById('input-city').value.trim();
+    const state    = document.getElementById('input-state').value.trim();
+    const pincode  = document.getElementById('input-pincode').value.trim();
+    const landmark = document.getElementById('input-landmark').value.trim();
+    const notes    = document.getElementById('input-notes').value.trim();
+
+    if (!name || !phone || !email || !street || !city || !state || !pincode) {
+      showToast('Please fill all required fields!', 'error');
+      return;
+    }
+
+    selectedAddress = { name, phone, email, street, city, state, pincode, landmark, notes };
+
+    // Auto-save this new address to user profile address book
+    if (!currentUser.addresses) currentUser.addresses = [];
+    currentUser.addresses.push(selectedAddress);
+    localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+
+    const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+    const idx = users.findIndex(u => u.email === currentUser.email);
+    if (idx !== -1) {
+      users[idx].addresses = currentUser.addresses;
+      localStorage.setItem('neimozhi_users', JSON.stringify(users));
+    }
   }
 
   // Compile totals
@@ -956,7 +961,7 @@ function submitOrder() {
   // Launch Razorpay modal
   initiateRazorpayPayment({
     amount: grandTotal,
-    customer: { name, phone, email, street, city, state, pincode, landmark, notes },
+    customer: selectedAddress,
     subtotal, deliveryCharge, grandTotal
   });
 }
@@ -1018,22 +1023,19 @@ function initiateRazorpayPayment(orderData) {
 
       // AUTO-SAVE ADDRESS TO PROFILE: save address attributes back to user profile so we never ask again
       if (currentUser) {
-        currentUser.address = {
-          phone: orderData.customer.phone,
-          street: orderData.customer.street,
-          city: orderData.customer.city,
-          state: orderData.customer.state,
-          pincode: orderData.customer.pincode,
-          landmark: orderData.customer.landmark
-        };
-        localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+        if (!currentUser.addresses) currentUser.addresses = [];
+        // Add if not already present
+        const addrExists = currentUser.addresses.some(a => a.street === orderData.customer.street && a.pincode === orderData.customer.pincode);
+        if (!addrExists) {
+          currentUser.addresses.push(orderData.customer);
+          localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
 
-        // Save back into global users array
-        const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
-        const idx = users.findIndex(u => u.email === currentUser.email);
-        if (idx !== -1) {
-          users[idx].address = currentUser.address;
-          localStorage.setItem('neimozhi_users', JSON.stringify(users));
+          const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+          const idx = users.findIndex(u => u.email === currentUser.email);
+          if (idx !== -1) {
+            users[idx].addresses = currentUser.addresses;
+            localStorage.setItem('neimozhi_users', JSON.stringify(users));
+          }
         }
       }
 
@@ -1445,7 +1447,176 @@ window.buyNowFromCard = function(productId) {
   window.buyNow(productId, selectedWeight);
 };
 
-// ================= USER AUTHENTICATION CONTROLLER =================
+// ================= AMAZON-STYLE ADDRESS BOOK SELECTOR MODULE =================
+let selectedAddressIdx = -1;
+
+window.renderAddressBook = function() {
+  const container = document.getElementById('address-book-selector-card');
+  if (!container) return;
+
+  if (!currentUser) return;
+
+  if (!currentUser.addresses) currentUser.addresses = [];
+
+  // Default selection to first address if present
+  if (currentUser.addresses.length > 0 && selectedAddressIdx === -1) {
+    selectedAddressIdx = 0;
+  }
+
+  let html = `
+    <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+      <h3 class="font-serif text-xl font-bold text-brand-dark">Select a Delivery Address</h3>
+      <button type="button" onclick="showAddressForm()" class="text-xs font-bold text-brand-gold hover:underline flex items-center gap-1"><i class="fa-solid fa-plus text-[10px]"></i> Add New Address</button>
+    </div>
+  `;
+
+  if (currentUser.addresses.length === 0) {
+    html += `
+      <div class="text-center py-6 text-slate-400 text-xs">
+        <i class="fa-solid fa-map-location-dot text-2xl text-slate-200 mb-2 block"></i>
+        No saved addresses. Please add a shipping address to checkout.
+      </div>
+    `;
+    // Show form immediately if no address saved
+    setTimeout(() => {
+      document.getElementById('shipping-form-wrapper').classList.remove('hidden');
+    }, 10);
+  } else {
+    html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">`;
+    currentUser.addresses.forEach((addr, idx) => {
+      const isSelected = idx === selectedAddressIdx;
+      html += `
+        <div onclick="selectSavedAddress(${idx})" class="cursor-pointer border-2 rounded-2xl p-4 transition-all flex flex-col justify-between ${isSelected ? 'border-brand-gold bg-amber-50/15' : 'border-slate-200 hover:border-slate-300'}">
+          <div class="text-xs space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-brand-dark">${addr.name}</span>
+              ${isSelected ? `<span class="bg-brand-gold text-white text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Selected</span>` : ''}
+            </div>
+            <p class="text-slate-500">${addr.street}</p>
+            <p class="text-slate-500">${addr.city}, ${addr.state} - ${addr.pincode}</p>
+            <p class="text-slate-400">Mobile: ${addr.phone}</p>
+          </div>
+          <div class="flex gap-3 mt-4 pt-3 border-t border-slate-100 justify-end">
+            <button type="button" onclick="event.stopPropagation();editSavedAddress(${idx})" class="text-[10px] font-bold text-slate-500 hover:text-brand-gold"><i class="fa-solid fa-pencil"></i> Edit</button>
+            <button type="button" onclick="event.stopPropagation();deleteSavedAddress(${idx})" class="text-[10px] font-bold text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i> Delete</button>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+};
+
+window.selectSavedAddress = function(idx) {
+  selectedAddressIdx = idx;
+  document.getElementById('shipping-form-wrapper').classList.add('hidden');
+  renderAddressBook();
+};
+
+let editingAddressIdx = -1;
+
+window.showAddressForm = function() {
+  editingAddressIdx = -1;
+  document.getElementById('address-form-title').textContent = 'Add New Shipping Address';
+  document.getElementById('shipping-form-wrapper').classList.remove('hidden');
+  
+  // Clear form inputs
+  const inputs = ['input-name', 'input-phone', 'input-street', 'input-city', 'input-state', 'input-pincode', 'input-landmark'];
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = (id === 'input-name') ? currentUser.name : (id === 'input-email') ? currentUser.email : '';
+  });
+  // Auto scroll to form
+  document.getElementById('shipping-form-wrapper').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.editSavedAddress = function(idx) {
+  editingAddressIdx = idx;
+  const addr = currentUser.addresses[idx];
+  document.getElementById('address-form-title').textContent = 'Edit Shipping Address';
+  document.getElementById('shipping-form-wrapper').classList.remove('hidden');
+
+  // Fill inputs
+  document.getElementById('input-name').value = addr.name || '';
+  document.getElementById('input-phone').value = addr.phone || '';
+  document.getElementById('input-email').value = addr.email || currentUser.email;
+  document.getElementById('input-street').value = addr.street || '';
+  document.getElementById('input-city').value = addr.city || '';
+  document.getElementById('input-state').value = addr.state || '';
+  document.getElementById('input-pincode').value = addr.pincode || '';
+  document.getElementById('input-landmark').value = addr.landmark || '';
+
+  document.getElementById('shipping-form-wrapper').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.cancelAddressEdit = function() {
+  document.getElementById('shipping-form-wrapper').classList.add('hidden');
+  editingAddressIdx = -1;
+};
+
+window.deleteSavedAddress = function(idx) {
+  if (confirm('Are you sure you want to delete this address?')) {
+    currentUser.addresses.splice(idx, 1);
+    if (selectedAddressIdx === idx) selectedAddressIdx = -1;
+    else if (selectedAddressIdx > idx) selectedAddressIdx--;
+
+    localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+
+    const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+    const uidx = users.findIndex(u => u.email === currentUser.email);
+    if (uidx !== -1) {
+      users[uidx].addresses = currentUser.addresses;
+      localStorage.setItem('neimozhi_users', JSON.stringify(users));
+    }
+    renderAddressBook();
+    showToast('Address deleted.');
+  }
+};
+
+// Add / Save new address changes from form
+window.saveSelectedAddress = function() {
+  const name     = document.getElementById('input-name').value.trim();
+  const phone    = document.getElementById('input-phone').value.trim();
+  const email    = document.getElementById('input-email').value.trim();
+  const street   = document.getElementById('input-street').value.trim();
+  const city     = document.getElementById('input-city').value.trim();
+  const state    = document.getElementById('input-state').value.trim();
+  const pincode  = document.getElementById('input-pincode').value.trim();
+  const landmark = document.getElementById('input-landmark').value.trim();
+
+  if (!name || !phone || !email || !street || !city || !state || !pincode) {
+    showToast('Please fill all required fields!', 'error');
+    return;
+  }
+
+  const addrObj = { name, phone, email, street, city, state, pincode, landmark };
+
+  if (!currentUser.addresses) currentUser.addresses = [];
+
+  if (editingAddressIdx > -1) {
+    currentUser.addresses[editingAddressIdx] = addrObj;
+    selectedAddressIdx = editingAddressIdx;
+    showToast('Address details updated!');
+  } else {
+    currentUser.addresses.push(addrObj);
+    selectedAddressIdx = currentUser.addresses.length - 1;
+    showToast('New shipping address saved!');
+  }
+
+  localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+
+  const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+  const idx = users.findIndex(u => u.email === currentUser.email);
+  if (idx !== -1) {
+    users[idx].addresses = currentUser.addresses;
+    localStorage.setItem('neimozhi_users', JSON.stringify(users));
+  }
+
+  document.getElementById('shipping-form-wrapper').classList.add('hidden');
+  renderAddressBook();
+};
 let currentUser = null;
 
 function initUserAuth() {
