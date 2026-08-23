@@ -226,6 +226,21 @@ function handleRoute() {
     renderHome();
   }
 
+  // HEADER TRANSPARENCY FIX: 
+  // Home view has a soft cream header background, while inner shop/cart/checkout pages require a white background.
+  const headerEl = document.querySelector('header');
+  if (headerEl) {
+    if (route === '#home' || route === '') {
+      headerEl.className = "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent py-4 px-6 md:px-12 flex justify-between items-center no-print";
+      // Force scroll logic update
+      if (window.scrollY > 20) {
+        headerEl.classList.add('nav-scrolled');
+      }
+    } else {
+      headerEl.className = "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white py-4 px-6 md:px-12 flex justify-between items-center no-print shadow-sm border-b border-brand-gold/10";
+    }
+  }
+
   // Active state styling for navigation links
   document.querySelectorAll('header nav a').forEach(link => {
     const linkHash = link.getAttribute('href');
@@ -1356,10 +1371,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Sticky Nav header
   const header = document.querySelector('header');
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      header.classList.add('nav-scrolled');
-    } else {
-      header.classList.remove('nav-scrolled');
+    const hash = window.location.hash || '#home';
+    if (hash === '#home' || hash === '') {
+      if (window.scrollY > 20) {
+        header.classList.add('nav-scrolled');
+      } else {
+        header.classList.remove('nav-scrolled');
+      }
     }
   });
 
