@@ -1755,6 +1755,7 @@ window.logoutUser = function() {
 function updateUserHeaderUI() {
   const desktopHeader = document.getElementById('user-header-profile');
   const mobileHeader = document.getElementById('mobile-user-header-profile');
+  const mobileAvatarHeader = document.getElementById('mobile-user-header-profile-avatar');
 
   // ONLY profile pic shown in the header as requested. Dropdown shows actions.
   const profileHTML = currentUser ? `
@@ -1775,6 +1776,16 @@ function updateUserHeaderUI() {
   ` : `<button onclick="openAuthModal()" class="bg-brand-forest hover:bg-brand-dark text-white px-4 py-2 rounded-full font-bold uppercase tracking-wider text-[10px] transition-all">Sign In</button>`;
 
   if (desktopHeader) desktopHeader.innerHTML = profileHTML;
+
+  // Add profile pic to top mobile header row when logged in
+  if (mobileAvatarHeader) {
+    mobileAvatarHeader.innerHTML = currentUser ? `
+      <a href="#account-settings" class="h-8 w-8 rounded-full overflow-hidden border border-brand-gold/40 shadow-sm block mr-1">
+        <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&q=80'}" class="h-full w-full object-cover">
+      </a>
+    ` : '';
+  }
+
   if (mobileHeader) mobileHeader.innerHTML = currentUser ? `
     <div class="flex flex-col items-center gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
       <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80'}" alt="Avatar" class="h-12 w-12 rounded-full border border-brand-gold/30 object-cover shadow">

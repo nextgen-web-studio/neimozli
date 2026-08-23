@@ -135,7 +135,12 @@
         <div id="revenue-labels" class="flex gap-1 sm:gap-2 mt-2"></div>
       </div>
       <div class="bg-white rounded-2xl border border-brand-gold/15 p-5 sm:p-6 shadow-sm">
-        <h2 class="font-serif text-xl font-bold text-brand-dark mb-4">Products</h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-serif text-xl font-bold text-brand-dark">Products</h2>
+          <button onclick="openProductModal(null)" class="text-[10px] font-bold uppercase tracking-wider bg-brand-forest hover:bg-brand-dark text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 shadow-sm">
+            <i class="fa-solid fa-plus text-[8px]"></i> Add Product
+          </button>
+        </div>
         <div id="product-list" class="space-y-3"></div>
       </div>
     </div>
@@ -459,19 +464,37 @@ function saveOrderEdits(){
 let activeEditProdId=null;
 function openProductModal(id){
   activeEditProdId=id;
-  const p=PRODUCTS[id];
-  document.getElementById('edit-prod-name').value=p.name;
-  
-  const container=document.getElementById('product-variants-edit-container');
-  container.innerHTML=Object.entries(p.variants).map(([wt,price])=>`
-    <div class="flex items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-150 text-xs">
-      <span class="font-bold text-slate-500">${wt} variant price:</span>
-      <div class="flex items-center gap-1">
-        <span class="text-slate-400">&#8377;</span>
-        <input type="number" id="edit-prod-p-${wt}" value="${price}" class="w-24 border border-slate-200 rounded px-1.5 py-0.5 text-xs text-right font-medium">
+  if(id === null) {
+    document.getElementById('product-modal-title').textContent='Add New Product';
+    document.getElementById('edit-prod-name').value='';
+    
+    // Default mock template variants for new products
+    const container=document.getElementById('product-variants-edit-container');
+    container.innerHTML=['250g', '500g', '1kg'].map(wt=>`
+      <div class="flex items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-150 text-xs">
+        <span class="font-bold text-slate-500">${wt} variant price:</span>
+        <div class="flex items-center gap-1">
+          <span class="text-slate-400">&#8377;</span>
+          <input type="number" id="edit-prod-p-${wt}" value="0" class="w-24 border border-slate-200 rounded px-1.5 py-0.5 text-xs text-right font-medium">
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } else {
+    const p=PRODUCTS[id];
+    document.getElementById('product-modal-title').textContent='Edit Product Variants';
+    document.getElementById('edit-prod-name').value=p.name;
+    
+    const container=document.getElementById('product-variants-edit-container');
+    container.innerHTML=Object.entries(p.variants).map(([wt,price])=>`
+      <div class="flex items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-150 text-xs">
+        <span class="font-bold text-slate-500">${wt} variant price:</span>
+        <div class="flex items-center gap-1">
+          <span class="text-slate-400">&#8377;</span>
+          <input type="number" id="edit-prod-p-${wt}" value="${price}" class="w-24 border border-slate-200 rounded px-1.5 py-0.5 text-xs text-right font-medium">
+        </div>
+      </div>
+    `).join('');
+  }
   document.getElementById('product-modal').classList.remove('hidden');
   document.getElementById('product-modal').classList.add('flex');
 }
@@ -483,22 +506,38 @@ function closeProductModal(){
 }
 
 function saveProductEdits(){
-  if(!activeEditProdId)return;
-  const p=PRODUCTS[activeEditProdId];
-  p.name=document.getElementById('edit-prod-name').value.trim();
+  const nameVal=document.getElementById('edit-prod-name').value.trim();
+  if(!nameVal) {
+    showToast('Please enter a product title', 'error');
+    return;
+  }
+
+  let targetId = activeEditProdId;
   
-  Object.keys(p.variants).forEach(wt=>{
+  if (targetId === null) {
+    // Generate new key path
+    targetId = 'prod-' + Date.now();
+    PRODUCTS[targetId] = {
+      name: nameVal,
+      variants: {}
+    };
+  } else {
+    PRODUCTS[targetId].name = nameVal;
+  }
+
+  // Save variant prices
+  ['250g', '500g', '1kg'].forEach(wt=>{
     const inp=document.getElementById(`edit-prod-p-${wt}`);
     if(inp){
-      p.variants[wt]=parseFloat(inp.value)||0;
+      PRODUCTS[targetId].variants[wt]=parseFloat(inp.value)||0;
     }
   });
 
   // Sync to store catalog storage configurations
   const catalogUpdates=JSON.parse(localStorage.getItem('neimozhi_catalog_updates')||'{}');
-  catalogUpdates[activeEditProdId]={
-    name: p.name,
-    variants: {...p.variants}
+  catalogUpdates[targetId]={
+    name: PRODUCTS[targetId].name,
+    variants: {...PRODUCTS[targetId].variants}
   };
   localStorage.setItem('neimozhi_catalog_updates',JSON.stringify(catalogUpdates));
   
@@ -506,7 +545,7 @@ function saveProductEdits(){
   window.dispatchEvent(new StorageEvent('storage',{key:'neimozhi_catalog_updates',newValue:JSON.stringify(catalogUpdates)}));
 
   renderProducts();closeProductModal();
-  showToast('Product parameters updated!');
+  showToast(activeEditProdId === null ? 'Product added successfully!' : 'Product parameters updated!');
 }
 
 function viewOrder(id){
