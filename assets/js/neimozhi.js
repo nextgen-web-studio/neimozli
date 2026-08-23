@@ -1109,7 +1109,7 @@ function renderOrderConfirmation(orderId) {
         <!-- Right actions side -->
         <div class="lg:col-span-4 space-y-4">
           <a href="#track-order/${order.id}" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-md">
-            <i class="fa-solid fa-location-dot text-sm"></i> Track Order (Amazon-Style)
+            <i class="fa-solid fa-location-dot text-sm"></i> Track Your Order
           </a>
 
           <button onclick="window.print()" class="w-full bg-brand-forest hover:bg-brand-dark text-white py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300">
@@ -1653,7 +1653,7 @@ function renderTrackOrder(orderId) {
       <!-- Title header -->
       <div class="bg-brand-dark text-white p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <span class="text-[9px] uppercase font-bold tracking-widest text-brand-gold block mb-1">Amazon-Style Tracking</span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-brand-gold block mb-1">Track Your Order</span>
           <h2 class="font-serif text-2xl sm:text-3xl font-bold">Delivery Status for ${order.id}</h2>
         </div>
         <div class="bg-brand-forest px-4 py-2 rounded-2xl border border-brand-gold/20 text-xs">
