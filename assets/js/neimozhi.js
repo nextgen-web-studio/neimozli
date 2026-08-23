@@ -822,6 +822,33 @@ function renderCheckout() {
     return;
   }
 
+  // FORCE SIGN-IN: Redirect if not logged in
+  if (!currentUser) {
+    showToast('Please sign in or create an account to place your order.', 'error');
+    window.location.hash = '#cart';
+    openAuthModal();
+    return;
+  }
+
+  // Pre-fill inputs with user details and saved address if available
+  setTimeout(() => {
+    const inputName = document.getElementById('input-name');
+    const inputEmail = document.getElementById('input-email');
+    if (inputName) inputName.value = currentUser.name || '';
+    if (inputEmail) inputEmail.value = currentUser.email || '';
+
+    // Auto-populate saved address fields if they exist on the account
+    if (currentUser.address) {
+      const addr = currentUser.address;
+      if (document.getElementById('input-phone')) document.getElementById('input-phone').value = addr.phone || '';
+      if (document.getElementById('input-street')) document.getElementById('input-street').value = addr.street || '';
+      if (document.getElementById('input-city')) document.getElementById('input-city').value = addr.city || '';
+      if (document.getElementById('input-state')) document.getElementById('input-state').value = addr.state || '';
+      if (document.getElementById('input-pincode')) document.getElementById('input-pincode').value = addr.pincode || '';
+      if (document.getElementById('input-landmark')) document.getElementById('input-landmark').value = addr.landmark || '';
+    }
+  }, 50);
+
   // Render checkout sidebar summary
   const sidebar = document.getElementById('checkout-summary-sidebar');
   if (!sidebar) return;
@@ -988,6 +1015,28 @@ function initiateRazorpayPayment(orderData) {
       };
       orders.unshift(newOrder);
       saveOrders();
+
+      // AUTO-SAVE ADDRESS TO PROFILE: save address attributes back to user profile so we never ask again
+      if (currentUser) {
+        currentUser.address = {
+          phone: orderData.customer.phone,
+          street: orderData.customer.street,
+          city: orderData.customer.city,
+          state: orderData.customer.state,
+          pincode: orderData.customer.pincode,
+          landmark: orderData.customer.landmark
+        };
+        localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+
+        // Save back into global users array
+        const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+        const idx = users.findIndex(u => u.email === currentUser.email);
+        if (idx !== -1) {
+          users[idx].address = currentUser.address;
+          localStorage.setItem('neimozhi_users', JSON.stringify(users));
+        }
+      }
+
       cart = [];
       saveCart();
       window.location.hash = `#order-confirmation/${orderId}`;
