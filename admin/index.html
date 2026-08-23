@@ -411,7 +411,6 @@ function renderTable(){
     </tr>`;
   }).join('');
 }
-}
 
 function changePage(d){
   currentPage=Math.max(1,Math.min(Math.ceil(filtered.length/PAGE_SIZE),currentPage+d));
