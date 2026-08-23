@@ -120,6 +120,16 @@ function loadState() {
   if (savedOrders) {
     orders = JSON.parse(savedOrders);
   }
+  
+  // Apply dynamic catalog edits made inside admin panel
+  const catalogUpdates = JSON.parse(localStorage.getItem('neimozhi_catalog_updates') || '{}');
+  Object.entries(catalogUpdates).forEach(([prodId, updates]) => {
+    if (PRODUCT_CATALOG[prodId]) {
+      PRODUCT_CATALOG[prodId].name = updates.name;
+      PRODUCT_CATALOG[prodId].variants = {...updates.variants};
+    }
+  });
+
   updateCartBadge();
 }
 
@@ -1333,6 +1343,20 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (hash.startsWith('#order-confirmation')) {
         const orderId = hash.split('/')[1];
         if (orderId) renderOrderConfirmation(orderId);
+      }
+    } else if (e.key === 'neimozhi_catalog_updates') {
+      loadState(); // apply updated names & prices
+      const hash = window.location.hash || '#home';
+      // Re-render home best sellers, listing grid or cart items dynamically to update layout details
+      if (hash === '#home' || hash === '') {
+        renderHome();
+      } else if (hash === '#products') {
+        renderProducts();
+      } else if (hash === '#cart') {
+        renderCart();
+      } else if (hash.startsWith('#product-details')) {
+        const prodId = hash.split('/')[1];
+        if (prodId) renderProductDetails(prodId);
       }
     }
   });
