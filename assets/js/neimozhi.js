@@ -937,7 +937,6 @@ function initiateRazorpayPayment(orderData) {
     currency: 'INR',
     name: 'NeiMozhi by Uthukuli',
     description: 'Premium Ghee & Dairy Order',
-    image: window.location.origin + '/assets/images/logo_neimozhi.jpg',
     prefill: {
       name:    orderData.customer.name,
       email:   orderData.customer.email,
