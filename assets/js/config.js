@@ -1,10 +1,10 @@
-﻿// NeiMozhi Configuration
+// NeiMozhi Configuration
 // Equivalent of .env for static frontend
 // DO NOT commit real production secrets here
 
 window.NEIMOZHI_CONFIG = {
   razorpay: {
-    keyId: 'rzp_test_TMkPB4Kf0yKrRE',
+    keyId: 'rzp_test_TT7XUIBB6OX66r',
     // NOTE: API Secret must NEVER be placed here (frontend is public)
     // Secret: rA0JKeTg2CLs8aCe2AP8rzNv  <-- Keep this only on your backend/server
   },
