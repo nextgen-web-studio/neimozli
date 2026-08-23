@@ -204,6 +204,9 @@ function handleRoute() {
   } else if (route === '#order-history') {
     document.getElementById('view-order-history').classList.add('active');
     renderOrderHistory();
+  } else if (route === '#track-order' && param) {
+    document.getElementById('view-track-order').classList.add('active');
+    renderTrackOrder(param);
   } else {
     // Default to home
     document.getElementById('view-home').classList.add('active');
@@ -1102,7 +1105,11 @@ function renderOrderConfirmation(orderId) {
 
         <!-- Right actions side -->
         <div class="lg:col-span-4 space-y-4">
-          <button onclick="window.print()" class="w-full bg-brand-forest hover:bg-brand-dark text-white py-4 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-md">
+          <a href="#track-order/${order.id}" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-md">
+            <i class="fa-solid fa-location-dot text-sm"></i> Track Order (Amazon-Style)
+          </a>
+
+          <button onclick="window.print()" class="w-full bg-brand-forest hover:bg-brand-dark text-white py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300">
             <i class="fa-solid fa-print text-sm"></i> Print Order / Save PDF
           </button>
           
@@ -1112,10 +1119,6 @@ function renderOrderConfirmation(orderId) {
 
           <a href="#products" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-900 py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all border border-amber-200/50 text-center">
             Continue Shopping
-          </a>
-
-          <a href="#home" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all border border-slate-200 text-center">
-            Back to Homepage
           </a>
         </div>
 
@@ -1263,8 +1266,11 @@ function renderOrderHistory() {
         </div>
         
         <div class="flex gap-3 w-full md:w-auto">
+          <a href="#track-order/${order.id}" class="flex-1 md:flex-initial bg-brand-forest hover:bg-brand-dark text-white text-center py-2 px-5 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-truck-fast"></i> Track
+          </a>
           <a href="#order-confirmation/${order.id}" class="flex-1 md:flex-initial bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-center py-2 px-5 rounded-xl font-bold uppercase tracking-wider text-[10px] transition-colors">
-            View Details
+            Details
           </a>
         </div>
       </div>
@@ -1276,6 +1282,8 @@ function renderOrderHistory() {
 // App Bootstrap Initialization
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
+  initUserAuth();
+  updateUserHeaderUI();
 
   // Route Handling
   window.addEventListener('hashchange', handleRoute);
@@ -1342,3 +1350,316 @@ window.buyNowFromCard = function(productId) {
   const selectedWeight = cardSelections[productId] || Object.keys(PRODUCT_CATALOG[productId].variants)[0];
   window.buyNow(productId, selectedWeight);
 };
+
+// ================= USER AUTHENTICATION CONTROLLER =================
+let currentUser = null;
+
+function initUserAuth() {
+  const saved = localStorage.getItem('neimozhi_current_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+  }
+}
+
+window.openAuthModal = function() {
+  document.getElementById('auth-modal').classList.remove('hidden');
+  document.getElementById('auth-modal').classList.add('flex');
+  switchAuthTab('login');
+};
+
+window.closeAuthModal = function() {
+  document.getElementById('auth-modal').classList.add('hidden');
+  document.getElementById('auth-modal').classList.remove('flex');
+  document.getElementById('auth-error-msg').classList.add('hidden');
+};
+
+window.switchAuthTab = function(tab) {
+  const loginForm = document.getElementById('login-auth-form');
+  const signupForm = document.getElementById('signup-auth-form');
+  const loginTab = document.getElementById('auth-tab-login');
+  const signupTab = document.getElementById('auth-tab-signup');
+  
+  if (tab === 'login') {
+    loginForm.classList.remove('hidden');
+    signupForm.classList.add('hidden');
+    loginTab.className = "flex-1 pb-3 text-xs uppercase font-bold tracking-wider text-brand-gold border-b-2 border-brand-gold focus:outline-none";
+    signupTab.className = "flex-1 pb-3 text-xs uppercase font-bold tracking-wider text-slate-400 border-b-2 border-transparent focus:outline-none";
+  } else {
+    loginForm.classList.add('hidden');
+    signupForm.classList.remove('hidden');
+    signupTab.className = "flex-1 pb-3 text-xs uppercase font-bold tracking-wider text-brand-gold border-b-2 border-brand-gold focus:outline-none";
+    loginTab.className = "flex-1 pb-3 text-xs uppercase font-bold tracking-wider text-slate-400 border-b-2 border-transparent focus:outline-none";
+  }
+};
+
+window.handleAuthSubmit = function(event, type) {
+  event.preventDefault();
+  const errorEl = document.getElementById('auth-error-msg');
+  errorEl.classList.add('hidden');
+
+  const users = JSON.parse(localStorage.getItem('neimozhi_users') || '[]');
+
+  if (type === 'signup') {
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim().toLowerCase();
+    const pass = document.getElementById('signup-pass').value;
+
+    if (pass.length < 6) {
+      errorEl.textContent = 'Password must be at least 6 characters.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    if (users.find(u => u.email === email)) {
+      errorEl.textContent = 'Email address already registered.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const newUser = { name, email, pass, avatar: null };
+    users.push(newUser);
+    localStorage.setItem('neimozhi_users', JSON.stringify(users));
+    
+    currentUser = newUser;
+    localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+    showToast(`Welcome, ${name}!`);
+    closeAuthModal();
+    updateUserHeaderUI();
+  } else {
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const pass = document.getElementById('login-pass').value;
+
+    const user = users.find(u => u.email === email && u.pass === pass);
+    if (!user) {
+      errorEl.textContent = 'Invalid email or password.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    currentUser = user;
+    localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+    showToast(`Welcome back, ${user.name}!`);
+    closeAuthModal();
+    updateUserHeaderUI();
+  }
+};
+
+window.handleGoogleAuth = function() {
+  // Simulator popup logic
+  showToast('Connecting to Google accounts...');
+  setTimeout(() => {
+    const mockGoogleUser = {
+      name: 'Shri Dharsan',
+      email: 'shri56728@gmail.com',
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80'
+    };
+    currentUser = mockGoogleUser;
+    localStorage.setItem('neimozhi_current_user', JSON.stringify(currentUser));
+    showToast('Signed in successfully with Google!');
+    closeAuthModal();
+    updateUserHeaderUI();
+  }, 1000);
+};
+
+window.logoutUser = function() {
+  currentUser = null;
+  localStorage.removeItem('neimozhi_current_user');
+  showToast('Logged out successfully.');
+  updateUserHeaderUI();
+  window.location.hash = '#home';
+};
+
+function updateUserHeaderUI() {
+  const desktopHeader = document.getElementById('user-header-profile');
+  const mobileHeader = document.getElementById('mobile-user-header-profile');
+
+  const profileHTML = currentUser ? `
+    <div class="flex items-center gap-2 group relative cursor-pointer py-1">
+      <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=40&q=80'}" alt="Avatar" class="h-8 w-8 rounded-full border border-brand-gold/30 object-cover">
+      <span class="text-xs font-semibold text-brand-dark max-w-[100px] truncate hidden md:inline">${currentUser.name}</span>
+      <button onclick="logoutUser()" class="hover:text-rose-600 text-[10px] uppercase font-bold tracking-wider ml-1" title="Sign Out"><i class="fa-solid fa-power-off"></i></button>
+    </div>
+  ` : `<button onclick="openAuthModal()" class="bg-brand-forest hover:bg-brand-dark text-white px-4 py-2 rounded-full font-bold uppercase tracking-wider text-[10px] transition-all">Sign In</button>`;
+
+  if (desktopHeader) desktopHeader.innerHTML = profileHTML;
+  if (mobileHeader) mobileHeader.innerHTML = currentUser ? `
+    <div class="flex flex-col items-center gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+      <img src="${currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80'}" alt="Avatar" class="h-10 w-10 rounded-full border border-brand-gold/30 object-cover">
+      <span class="text-xs font-bold text-brand-dark">${currentUser.name}</span>
+      <button onclick="logoutUser()" class="text-xs text-rose-500 font-bold uppercase mt-1">Sign Out</button>
+    </div>
+  ` : `<button onclick="openAuthModal()" class="w-full bg-brand-forest text-white py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider">Sign In</button>`;
+}
+
+// ================= AMAZON-STYLE TRACKING VIEW =================
+function renderTrackOrder(orderId) {
+  const container = document.getElementById('track-order-content');
+  if (!container) return;
+
+  const order = orders.find(o => o.id === orderId);
+  if (!order) {
+    container.innerHTML = `
+      <div class="text-center py-16 bg-white rounded-3xl border border-brand-gold/10 p-8 glow-gold max-w-lg mx-auto">
+        <i class="fa-solid fa-triangle-exclamation text-5xl text-rose-500 mb-4 block"></i>
+        <h3 class="font-serif text-2xl font-bold text-brand-dark mb-2">Order Not Found</h3>
+        <p class="text-xs text-slate-500 mb-8">No matching order found for ID: ${orderId}</p>
+        <a href="#order-history" class="bg-brand-forest text-white px-8 py-3.5 rounded-full font-bold uppercase tracking-wider text-xs">View History</a>
+      </div>
+    `;
+    return;
+  }
+
+  // Tracking timeline calculations
+  const statuses = ['Paid', 'Dispatched', 'Delivered'];
+  const currentIdx = statuses.indexOf(order.status || 'Paid');
+
+  // Dates helpers
+  const baseDate = order.timestamp ? new Date(order.timestamp) : new Date();
+  const options = { weekday: 'short', month: 'short', day: 'numeric' };
+  
+  const placedDateStr = baseDate.toLocaleDateString('en-IN', options);
+  const prepDateStr = new Date(baseDate.getTime() + 86400000).toLocaleDateString('en-IN', options); // +1 day
+  const shipDateStr = new Date(baseDate.getTime() + 172800000).toLocaleDateString('en-IN', options); // +2 days
+  const delivDateStr = new Date(baseDate.getTime() + 345600000).toLocaleDateString('en-IN', options); // +4 days
+
+  container.innerHTML = `
+    <!-- Top Nav Back -->
+    <div class="mb-8">
+      <a href="#order-history" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-brand-dark transition-colors">
+        <i class="fa-solid fa-arrow-left-long text-sm"></i> Back to History
+      </a>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
+      <!-- Title header -->
+      <div class="bg-brand-dark text-white p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-brand-gold block mb-1">Amazon-Style Tracking</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold">Delivery Status for ${order.id}</h2>
+        </div>
+        <div class="bg-brand-forest px-4 py-2 rounded-2xl border border-brand-gold/20 text-xs">
+          Estimated Delivery: <strong class="text-brand-gold">${delivDateStr}</strong>
+        </div>
+      </div>
+
+      <!-- Tracking Timeline Progress Block -->
+      <div class="p-6 sm:p-10 border-b border-slate-100">
+        <div class="relative py-8">
+          <!-- Desktop Horizontal Line -->
+          <div class="absolute top-[48px] left-[12%] right-[12%] h-[4px] bg-slate-100 rounded hidden md:block">
+            <div class="h-full bg-brand-gold transition-all duration-500 rounded" style="width: ${currentIdx === 0 ? '0%' : currentIdx === 1 ? '50%' : '100%'}"></div>
+          </div>
+
+          <!-- Timeline Items -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 relative z-10 text-center">
+            
+            <!-- Step 1: Placed -->
+            <div class="flex flex-row md:flex-col items-center gap-4 md:gap-2">
+              <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-4 ${currentIdx >= 0 ? 'border-brand-gold bg-brand-gold text-white' : 'border-slate-200 bg-white text-slate-400'} flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+                <i class="fa-solid fa-box-open text-sm sm:text-base"></i>
+              </div>
+              <div class="text-left md:text-center">
+                <h4 class="text-xs font-bold text-brand-dark">Order Placed</h4>
+                <p class="text-[10px] text-slate-500">${placedDateStr}</p>
+              </div>
+            </div>
+
+            <!-- Step 2: Preparing -->
+            <div class="flex flex-row md:flex-col items-center gap-4 md:gap-2">
+              <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-4 ${currentIdx >= 0 ? 'border-brand-gold bg-brand-gold text-white' : 'border-slate-200 bg-white text-slate-400'} flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+                <i class="fa-solid fa-mortar-pestle text-sm sm:text-base"></i>
+              </div>
+              <div class="text-left md:text-center">
+                <h4 class="text-xs font-bold text-brand-dark">Fresh Churning</h4>
+                <p class="text-[10px] text-slate-500">${prepDateStr}</p>
+              </div>
+            </div>
+
+            <!-- Step 3: Dispatched -->
+            <div class="flex flex-row md:flex-col items-center gap-4 md:gap-2">
+              <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-4 ${currentIdx >= 1 ? 'border-brand-gold bg-brand-gold text-white' : 'border-slate-200 bg-white text-slate-400'} flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+                <i class="fa-solid fa-truck-fast text-sm sm:text-base"></i>
+              </div>
+              <div class="text-left md:text-center">
+                <h4 class="text-xs font-bold text-brand-dark">Dispatched</h4>
+                <p class="text-[10px] text-slate-500">${currentIdx >= 1 ? shipDateStr : 'Pending Dispatch'}</p>
+              </div>
+            </div>
+
+            <!-- Step 4: Delivered -->
+            <div class="flex flex-row md:flex-col items-center gap-4 md:gap-2">
+              <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-4 ${currentIdx >= 2 ? 'border-brand-gold bg-brand-gold text-white' : 'border-slate-200 bg-white text-slate-400'} flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+                <i class="fa-solid fa-house-circle-check text-sm sm:text-base"></i>
+              </div>
+              <div class="text-left md:text-center">
+                <h4 class="text-xs font-bold text-brand-dark">Delivered</h4>
+                <p class="text-[10px] text-slate-500">${currentIdx >= 2 ? delivDateStr : 'Pending Delivery'}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Map & Item Details grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100 bg-slate-50/50">
+        <!-- Delivery Map mockup -->
+        <div class="p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <h3 class="font-serif text-lg font-bold text-brand-dark mb-2">Transit Map</h3>
+            <p class="text-[10px] text-slate-500 mb-4">Real-time status updates loaded from Uthukuli Dairy Hub.</p>
+          </div>
+          <div class="h-56 bg-slate-200 rounded-2xl relative overflow-hidden border border-slate-300 shadow-inner flex items-center justify-center">
+            <!-- Simulated map background -->
+            <div class="absolute inset-0 bg-[radial-gradient(#bbb_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
+            <!-- route line -->
+            <svg class="absolute inset-0 h-full w-full">
+              <path d="M 40 180 Q 150 60, 240 100 T 320 80" fill="none" stroke="#C59B27" stroke-width="3" stroke-dasharray="6,4"/>
+            </svg>
+            <!-- Pins -->
+            <div class="absolute bottom-6 left-10 flex flex-col items-center">
+              <span class="text-[8px] font-bold bg-brand-dark text-white px-2 py-0.5 rounded shadow">Uthukuli</span>
+              <i class="fa-solid fa-store text-brand-dark text-lg mt-0.5"></i>
+            </div>
+            <div class="absolute top-[60px] right-24 flex flex-col items-center">
+              <span class="text-[8px] font-bold bg-brand-gold text-white px-2 py-0.5 rounded shadow">Your Address</span>
+              <i class="fa-solid fa-location-dot text-brand-gold text-xl mt-0.5 bounce-anim"></i>
+            </div>
+            <!-- Delivery Truck Pin -->
+            ${currentIdx === 1 ? `
+              <div class="absolute top-[80px] left-[45%] flex flex-col items-center">
+                <i class="fa-solid fa-truck text-amber-600 text-lg"></i>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
+        <!-- Package breakdown summary -->
+        <div class="p-6 sm:p-8 space-y-4">
+          <h3 class="font-serif text-lg font-bold text-brand-dark">Package Contents</h3>
+          <div class="divide-y divide-slate-100 max-h-60 overflow-y-auto pr-2">
+            ${(order.items || []).map(item => `
+              <div class="py-3 flex justify-between items-center text-xs">
+                <div class="flex items-center gap-3">
+                  <div class="h-10 w-10 rounded-lg overflow-hidden bg-brand-light border border-slate-200 shrink-0">
+                    <img src="${item.image}" class="w-full h-full object-cover">
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-brand-dark">${item.name}</h4>
+                    <span class="text-[9px] text-slate-400">${item.weight} &bull; Qty: ${item.quantity}</span>
+                  </div>
+                </div>
+                <span class="font-bold text-brand-dark">₹${item.price * item.quantity}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="border-t border-slate-100 pt-4 text-xs space-y-1">
+            <div class="flex justify-between text-slate-500"><span>Grand Total Paid:</span><strong class="text-brand-dark text-sm font-serif">₹${order.total}</strong></div>
+            <div class="flex justify-between text-slate-500"><span>Payment Method:</span><span class="uppercase font-semibold">${order.paymentMethod || 'razorpay'}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
